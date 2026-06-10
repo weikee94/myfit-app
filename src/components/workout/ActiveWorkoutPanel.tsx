@@ -78,20 +78,19 @@ export default function ActiveWorkoutPanel() {
           <Card key={ex.exercise_id}>
             <CardHeader className="flex-row items-center justify-between gap-3 p-3 pb-2">
               <div className="flex items-center gap-3 min-w-0">
-                {hasImage ? (
-                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-muted">
+                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-muted relative">
+                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                    <Dumbbell className="h-5 w-5" />
+                  </div>
+                  {hasImage && (
                     <img
                       src={ex.demo_url!}
                       alt={ex.exercise_name}
-                      className="h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-contain"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                     />
-                  </div>
-                ) : (
-                  <div className="h-12 w-12 shrink-0 flex items-center justify-center rounded-md bg-muted text-muted-foreground">
-                    <Dumbbell className="h-5 w-5" />
-                  </div>
-                )}
+                  )}
+                </div>
                 <CardTitle className="text-base truncate">{ex.exercise_name}</CardTitle>
               </div>
               <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => session.removeExercise(ex.exercise_id)}>

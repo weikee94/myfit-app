@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dumbbell } from "lucide-react";
@@ -21,6 +22,9 @@ export default function ExerciseCard({ exercise, onClick, showBenefit, compact }
   const handleClick = onClick ?? (() => navigate(`/exercises/${exercise.id}`));
 
   const hasImage = !!exercise.demo_url && (exercise.demo_type === "image" || exercise.demo_type === "gif");
+  const [imgError, setImgError] = useState(false);
+
+  const showPhoto = hasImage && !imgError;
 
   return (
     <Card
@@ -28,32 +32,22 @@ export default function ExerciseCard({ exercise, onClick, showBenefit, compact }
       className={cn("cursor-pointer transition-colors hover:bg-accent/50", compact && "shadow-none")}
     >
       <CardContent className={cn("flex gap-3", compact ? "p-3" : "p-4")}>
-        {hasImage && (
-          <div className={cn(
-            "shrink-0 overflow-hidden rounded-md bg-muted",
-            compact ? "h-14 w-14" : "h-16 w-16"
-          )}>
+        <div className={cn(
+          "shrink-0 overflow-hidden rounded-md bg-muted flex items-center justify-center",
+          compact ? "h-14 w-14" : "h-16 w-16"
+        )}>
+          {showPhoto ? (
             <img
               src={exercise.demo_url!}
               alt={exercise.name}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               loading="lazy"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.style.display = "none";
-              }}
+              onError={() => setImgError(true)}
             />
-          </div>
-        )}
-
-        {!hasImage && (
-          <div className={cn(
-            "shrink-0 flex items-center justify-center rounded-md bg-muted text-muted-foreground",
-            compact ? "h-14 w-14" : "h-16 w-16"
-          )}>
-            <Dumbbell className="h-6 w-6" />
-          </div>
-        )}
+          ) : (
+            <Dumbbell className="h-6 w-6 text-muted-foreground" />
+          )}
+        </div>
 
         <div className="min-w-0 flex-1 flex flex-col gap-1.5">
           <div className="flex items-start justify-between gap-2">
