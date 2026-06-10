@@ -15,6 +15,8 @@ export interface ActiveSet {
 export interface ActiveExercise {
   exercise_id: string;
   exercise_name: string;
+  demo_url?: string | null;
+  demo_type?: "youtube" | "gif" | "image" | null;
   order_index: number;
   sets: ActiveSet[];
 }
@@ -27,7 +29,7 @@ interface WorkoutSessionState {
   isActive: boolean;
 
   startSession: (workoutId: string, type: WorkoutType) => void;
-  addExercise: (exercise: { id: string; name: string }) => void;
+  addExercise: (exercise: { id: string; name: string; demo_url?: string | null; demo_type?: "youtube" | "gif" | "image" | null }) => void;
   removeExercise: (exerciseId: string) => void;
   addSet: (exerciseId: string) => void;
   updateSet: (exerciseId: string, setNumber: number, data: Partial<ActiveSet>) => void;
@@ -55,6 +57,8 @@ export const useWorkoutSession = create<WorkoutSessionState>()(
             {
               exercise_id:   exercise.id,
               exercise_name: exercise.name,
+              demo_url:      exercise.demo_url ?? null,
+              demo_type:     exercise.demo_type ?? null,
               order_index:   exercises.length,
               sets:          [{ set_number: 1, completed: false }],
             },

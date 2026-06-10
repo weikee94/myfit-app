@@ -1,6 +1,8 @@
 import type { ExerciseInsert } from "@/types/exercise";
 
-// 20 triathlon-focused strength exercises. demo_url points to free GIFs from exercisedb/wger.
+// 20 triathlon-focused strength exercises.
+// demo_url / demo_type now use public-domain images from yuhonas/free-exercise-db
+// (see claude.md for full strategy + self-hosting recommendations).
 export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
   // ── SWIM ──────────────────────────────────────────────────────────────────
   {
@@ -10,8 +12,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "cable",
     triathlon_benefit: "Builds the lat pull-phase power that drives every freestyle stroke catch and pull.",
     instructions: "Grip bar just outside shoulder width. Pull to upper chest, squeeze lats at bottom. Control the return.",
-    demo_url: "https://v2.exercisedb.io/image/OVP-LnSMSJPSnt",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Close-Grip_Front_Lat_Pulldown/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -21,8 +23,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "dumbbell",
     triathlon_benefit: "Unilateral lat strength directly mirrors the asymmetric pulling motion of freestyle swimming.",
     instructions: "Brace on a bench, row dumbbell to hip. Elbow stays close to torso. Full range of motion.",
-    demo_url: "https://v2.exercisedb.io/image/B1c7vFjJoqp3Ld",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Dumbbell_Row/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -32,8 +34,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "cable",
     triathlon_benefit: "Maintains shoulder health and scapular stability — essential for high swim volume weeks.",
     instructions: "Set cable at face height. Pull to forehead, elbows high, externally rotate at end range.",
-    demo_url: "https://v2.exercisedb.io/image/UMLH2wMTWjxasD",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cable_Face_Pull/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -43,8 +45,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "bodyweight",
     triathlon_benefit: "Bodyweight pulling standard. Strong pull-ups directly transfer to swim stroke efficiency.",
     instructions: "Dead hang start. Pull chin over bar leading with chest. Full lockout on each rep.",
-    demo_url: "https://v2.exercisedb.io/image/X4lLr9y3FMNz-p",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pull_Ups/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   // ── BIKE ──────────────────────────────────────────────────────────────────
@@ -55,8 +57,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "dumbbell",
     triathlon_benefit: "Unilateral quad and glute strength that maps directly to the single-leg pedal stroke.",
     instructions: "Rear foot elevated on bench. Descend until rear knee nearly touches floor. Drive through front heel.",
-    demo_url: "https://v2.exercisedb.io/image/LU5pE-mj2LVeag",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bulgarian_Split_Squat/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -66,8 +68,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "barbell",
     triathlon_benefit: "Maximises peak glute force in hip extension — the power phase of every pedal stroke.",
     instructions: "Upper back on bench, bar across hips. Drive hips to full extension. Squeeze glutes at top.",
-    demo_url: "https://v2.exercisedb.io/image/1jNRb1cL-V8E7A",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Hip_Thrust/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -77,8 +79,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "barbell",
     triathlon_benefit: "Posterior chain resilience for long cycling hours and injury prevention on the run.",
     instructions: "Hinge at hips with soft knees, bar stays close to legs. Feel hamstring stretch, drive hips forward to return.",
-    demo_url: "https://v2.exercisedb.io/image/Kq6gcMJH7rdMlS",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Romanian_Deadlift/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -88,8 +90,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "machine",
     triathlon_benefit: "High quad volume without spinal load — ideal during heavy bike training blocks.",
     instructions: "Feet hip-width at mid-plate. Control descent to 90°, press through heels. Don't lock knees at top.",
-    demo_url: "https://v2.exercisedb.io/image/7j5OJtVhfCMUiA",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg_Press/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   // ── RUN ──────────────────────────────────────────────────────────────────
@@ -100,8 +102,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "bodyweight",
     triathlon_benefit: "The #1 evidence-based exercise for hamstring injury prevention in runners.",
     instructions: "Kneel with feet anchored. Slowly lower torso toward floor under control. Push off to return.",
-    demo_url: "https://v2.exercisedb.io/image/UfvF3sZHUEWNIk",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Nordic_Hamstring_Curl/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -111,8 +113,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "dumbbell",
     triathlon_benefit: "Hip stability in single-leg stance — mirrors run gait and prevents lateral drop.",
     instructions: "Standing on one leg, hinge forward with dumbbell in opposite hand. Keep hips square throughout.",
-    demo_url: "https://v2.exercisedb.io/image/w3VoG3qS8gLFrV",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Romanian_Deadlift/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -122,8 +124,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "dumbbell",
     triathlon_benefit: "Mimics run knee drive and trains eccentric deceleration — reduces impact injury risk.",
     instructions: "Step onto box with full foot contact. Drive through heel to stand. Step down with control.",
-    demo_url: "https://v2.exercisedb.io/image/jFBfQhV9wBJlvD",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Box_Step_Up/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -133,8 +135,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "bodyweight",
     triathlon_benefit: "Achilles load tolerance and calf strength are critical for run economy and injury prevention.",
     instructions: "Stand on one leg on edge of step. Lower heel below step level, raise to full plantar flexion.",
-    demo_url: "https://v2.exercisedb.io/image/AEvHtxpNfzHPBN",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calf_Raise/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   // ── BASE STRENGTH ─────────────────────────────────────────────────────────
@@ -145,8 +147,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "barbell",
     triathlon_benefit: "Total posterior chain force production — the foundation that supports all three sports.",
     instructions: "Hip-width stance. Bar over mid-foot. Hinge and grip, brace hard, drive floor away. Lock out hips and knees.",
-    demo_url: "https://v2.exercisedb.io/image/sXkCbpJ4M4bVmg",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Deadlift/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -156,8 +158,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "barbell",
     triathlon_benefit: "Bilateral lower-body strength foundation. Peak power output transfers to bike and run.",
     instructions: "Bar on upper traps. Squat to at least parallel. Knees track toes. Drive through full foot.",
-    demo_url: "https://v2.exercisedb.io/image/MhkBzTNpNFWFcD",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Squat/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -167,8 +169,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "barbell",
     triathlon_benefit: "Shoulder girdle integrity for high swim volume. Protects rotator cuff under fatigue.",
     instructions: "Bar at collarbone. Brace core, press vertically overhead. Full lockout. Lower under control.",
-    demo_url: "https://v2.exercisedb.io/image/YHRiL4Y6bFnTdX",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Barbell_Shoulder_Press/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   // ── CORE / STABILITY ─────────────────────────────────────────────────────
@@ -179,8 +181,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "cable",
     triathlon_benefit: "Anti-rotation core stability — underpins efficient power transfer in all three disciplines.",
     instructions: "Cable at chest height, stand sideways. Press straight out and hold 2s, resist rotation. Return slowly.",
-    demo_url: "https://v2.exercisedb.io/image/2qeR4dv3mQA4-1",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pallof_Press/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -190,8 +192,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "bodyweight",
     triathlon_benefit: "Hip adductor loading prevents groin injuries that frequently derail run-heavy training blocks.",
     instructions: "Top leg on bench, bottom leg hanging. Lift bottom leg to meet top leg. Hold 3–5s, lower.",
-    demo_url: "https://v2.exercisedb.io/image/k9H4GtUb2KAF-j",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Copenhagen_Adductor/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -201,8 +203,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "none",
     triathlon_benefit: "Lumbar spine stability under contralateral limb movement — directly transfers to all three sports.",
     instructions: "Lying on back, arms straight up, knees 90°. Slowly lower opposite arm/leg. Breathe throughout. Keep low back flat.",
-    demo_url: "https://v2.exercisedb.io/image/xvS0xLHMRdw1G6",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dead_Bug/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -212,8 +214,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "barbell",
     triathlon_benefit: "Upright torso posture mirrors TT aero position. Builds quad strength with core demand.",
     instructions: "Bar in front rack position. Elbows high throughout. Squat to depth with vertical torso.",
-    demo_url: "https://v2.exercisedb.io/image/7VVlK5OvBmKwgJ",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Squat/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
   {
@@ -223,8 +225,8 @@ export const SEED_EXERCISES: Omit<ExerciseInsert, "created_by">[] = [
     equipment: "bodyweight",
     triathlon_benefit: "Reinforces swim-specific pulling pattern under fatigue with scalable difficulty.",
     instructions: "Lean back, body straight. Pull chest to handles, squeeze shoulder blades. The more horizontal, the harder.",
-    demo_url: "https://v2.exercisedb.io/image/jI3kKTwqHMnDz4",
-    demo_type: "gif",
+    demo_url: "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/TRX_Row/0.jpg",
+    demo_type: "image",
     is_public: true,
   },
 ];

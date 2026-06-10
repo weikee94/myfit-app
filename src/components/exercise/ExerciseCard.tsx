@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dumbbell } from "lucide-react";
 import type { Exercise, ExerciseCategory } from "@/types/exercise";
 import { cn } from "@/lib/utils";
 
@@ -19,32 +20,63 @@ export default function ExerciseCard({ exercise, onClick, showBenefit, compact }
   const navigate = useNavigate();
   const handleClick = onClick ?? (() => navigate(`/exercises/${exercise.id}`));
 
+  const hasImage = !!exercise.demo_url && (exercise.demo_type === "image" || exercise.demo_type === "gif");
+
   return (
     <Card
       onClick={handleClick}
       className={cn("cursor-pointer transition-colors hover:bg-accent/50", compact && "shadow-none")}
     >
-      <CardContent className={cn("flex flex-col gap-2", compact ? "p-3" : "p-4")}>
-        <div className="flex items-start justify-between gap-2">
-          <p className={cn("font-medium leading-snug", compact ? "text-sm" : "text-base")}>{exercise.name}</p>
-          <Badge variant={CATEGORY_VARIANT[exercise.category]} className="shrink-0 capitalize">
-            {exercise.category}
-          </Badge>
-        </div>
-
-        {exercise.muscle_groups.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {exercise.muscle_groups.slice(0, 3).map((m) => (
-              <span key={m} className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground capitalize">
-                {m}
-              </span>
-            ))}
+      <CardContent className={cn("flex gap-3", compact ? "p-3" : "p-4")}>
+        {hasImage && (
+          <div className={cn(
+            "shrink-0 overflow-hidden rounded-md bg-muted",
+            compact ? "h-14 w-14" : "h-16 w-16"
+          )}>
+            <img
+              src={exercise.demo_url!}
+              alt={exercise.name}
+              className="h-full w-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = "none";
+              }}
+            />
           </div>
         )}
 
-        {showBenefit && exercise.triathlon_benefit && (
-          <p className="text-xs text-muted-foreground line-clamp-2">{exercise.triathlon_benefit}</p>
+        {!hasImage && (
+          <div className={cn(
+            "shrink-0 flex items-center justify-center rounded-md bg-muted text-muted-foreground",
+            compact ? "h-14 w-14" : "h-16 w-16"
+          )}>
+            <Dumbbell className="h-6 w-6" />
+          </div>
         )}
+
+        <div className="min-w-0 flex-1 flex flex-col gap-1.5">
+          <div className="flex items-start justify-between gap-2">
+            <p className={cn("font-medium leading-snug", compact ? "text-sm" : "text-base")}>{exercise.name}</p>
+            <Badge variant={CATEGORY_VARIANT[exercise.category]} className="shrink-0 capitalize">
+              {exercise.category}
+            </Badge>
+          </div>
+
+          {exercise.muscle_groups.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {exercise.muscle_groups.slice(0, 3).map((m) => (
+                <span key={m} className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground capitalize">
+                  {m}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {showBenefit && exercise.triathlon_benefit && (
+            <p className="text-xs text-muted-foreground line-clamp-2">{exercise.triathlon_benefit}</p>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
