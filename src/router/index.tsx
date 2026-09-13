@@ -14,6 +14,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import PlanPage from "@/pages/PlanPage";
 import PlanWeekPage from "@/pages/PlanWeekPage";
 import BenWorkoutsPage from "@/pages/BenWorkoutsPage";
+import HansonsSchedulePage from "@/pages/HansonsSchedulePage";
 
 export const router = createBrowserRouter([
   { path: "/login",          element: <LoginPage /> },
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       { path: "/progress",         element: <ProgressPage /> },
       { path: "/plan",             element: <PlanPage /> },
       { path: "/plan/ben",         element: <BenWorkoutsPage /> },
+      { path: "/plan/hansons",     element: <HansonsSchedulePage /> },
       { path: "/plan/:week",       element: <PlanWeekPage /> },
       { path: "/profile",          element: <ProfilePage /> },
     ],

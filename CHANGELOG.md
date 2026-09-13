@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Runna main running plan (12/6 BYD Marathon, in progress) on the Plan page's Runs tab: a "today" card from the phone's date (run, pace, strength session, ★ gate / 🍫 fueling / ⛰ no-hill notes), header with paces and three disciplines, weekly mileage chart (W1–W4 actual vs planned, cutback and peak weeks, long-run line), W1–W17 day-by-day schedule with the current week open and overlays attached to their days (suggested W13–W16 long-run changes shown as original → suggestion), and collapsible reference sections (two numbers, W1–W4 readings, risk, gates, fueling, no-hill alternatives, race week, adjustments, footnote). Data in `src/data/plans/runnaMain.ts`.
 - Installable web app: `manifest.webmanifest`, app icons (`apple-touch-icon.png`, 192/512 and maskable PNGs, 32px favicon) and iOS home-screen meta tags, so "Add to Home Screen" opens MyFit full-screen with its own icon. No service worker / offline mode.
 - Ben's two follow-along workouts at `/plan/ben` (entry card on the Strength tab): strength circuit (original with video timestamps, the two required changes, modified 3-round version) and core workout (24 moves in 4 groups with keep/core/optional/skip status, reasons, 16-move follow-along version), plus when-to-use table and fatigue notes. Timestamps become links to the video once `videoUrl` is filled in `src/data/plans/benWorkouts.ts`.
 - Hansons 18-week running schedule (2026 Tokyo Marathon, original dates) on a new "Runs" tab of `/plan`: collapsible W1–W18 with each day's workout type, workout and distance, weekly mileage, and a pace row that follows the goal chosen on the Paces tab. Two sheet values that don't add up (W13 Tuesday, W18 Saturday) are kept as-is with a ⚠ note. The strength tab is renamed from "Weeks" to "Strength". Data in `src/data/plans/hansonsSchedule.ts`.
@@ -29,6 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Theme toggle on mobile is a single 44px button that cycles light → dark → system (desktop keeps the three-button control).
 - Plan pages: explanation text raised from 12px to 14px, the Runna heading now shows only on the Strength tab, and week titles wrap to two lines instead of being cut off.
 - Active workout session is stored in `localStorage` instead of `sessionStorage`, so it survives iOS closing the home-screen app.
+
+- The Hansons 2026 Tokyo schedule moved from the Runs tab to a reference page at `/plan/hansons`, linked from the bottom of the Runs tab.
 
 ### Fixed
 - Missing favicon (`/favicon.ico` was referenced but never existed).

@@ -3,7 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HansonsPaceChart from "@/components/plan/HansonsPaceChart";
-import HansonsSchedule from "@/components/plan/HansonsSchedule";
+import RunnaMainPlan from "@/components/plan/RunnaMainPlan";
 import { cn } from "@/lib/utils";
 import { RUNNA_MARATHON_PLAN as plan } from "@/data/plans/runnaMarathon";
 
@@ -161,7 +161,7 @@ export default function PlanPage() {
           </div>
           <WeekList />
         </TabsContent>
-        <TabsContent value="runs" className="mt-4"><HansonsSchedule /></TabsContent>
+        <TabsContent value="runs" className="mt-4"><RunnaMainPlan /></TabsContent>
         <TabsContent value="rules" className="mt-4"><RulesReference /></TabsContent>
         <TabsContent value="paces" className="mt-4"><HansonsPaceChart /></TabsContent>
       </Tabs>
