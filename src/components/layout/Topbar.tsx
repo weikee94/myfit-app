@@ -6,6 +6,7 @@ const TITLES: Record<string, string> = {
   "/workouts":  "Workout Log",
   "/workouts/new": "New Workout",
   "/exercises": "Exercise Library",
+  "/plan":      "Training Plan",
   "/progress":  "Progress",
   "/profile":   "Profile",
 };

@@ -11,6 +11,8 @@ import ExerciseLibraryPage from "@/pages/ExerciseLibraryPage";
 import ExerciseDetailPage from "@/pages/ExerciseDetailPage";
 import ProgressPage from "@/pages/ProgressPage";
 import ProfilePage from "@/pages/ProfilePage";
+import PlanPage from "@/pages/PlanPage";
+import PlanWeekPage from "@/pages/PlanWeekPage";
 
 export const router = createBrowserRouter([
   { path: "/login",          element: <LoginPage /> },
@@ -26,6 +28,8 @@ export const router = createBrowserRouter([
       { path: "/exercises",        element: <ExerciseLibraryPage /> },
       { path: "/exercises/:id",    element: <ExerciseDetailPage /> },
       { path: "/progress",         element: <ProgressPage /> },
+      { path: "/plan",             element: <PlanPage /> },
+      { path: "/plan/:week",       element: <PlanWeekPage /> },
       { path: "/profile",          element: <ProfilePage /> },
     ],
   },

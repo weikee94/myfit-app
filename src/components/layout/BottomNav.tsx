@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Dumbbell, BookOpen, TrendingUp, User } from "lucide-react";
+import { LayoutDashboard, Dumbbell, BookOpen, CalendarDays, TrendingUp, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
   { to: "/dashboard", icon: LayoutDashboard, label: "Home"      },
   { to: "/workouts",  icon: Dumbbell,        label: "Log"        },
   { to: "/exercises", icon: BookOpen,        label: "Exercises"  },
+  { to: "/plan",      icon: CalendarDays,    label: "Plan"       },
   { to: "/progress",  icon: TrendingUp,      label: "Progress"   },
   { to: "/profile",   icon: User,            label: "Profile"    },
 ];
