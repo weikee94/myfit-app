@@ -14,6 +14,17 @@ function WeekList() {
 
   return (
     <div className="flex flex-col gap-2">
+      <Link to="/plan/ben">
+        <Card className="transition-colors hover:bg-accent">
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium">Ben 专属 · 两套跟练课</p>
+              <p className="text-xs text-muted-foreground">力量循环 · 硬课 ／ 核心跟练 · 低疲劳</p>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
       <p className="text-sm text-muted-foreground">{plan.scheduleNote}</p>
       {weekNumbers.map((n) => {
         const week = plan.weeks.find((w) => w.week === n);

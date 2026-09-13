@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Ben's two follow-along workouts at `/plan/ben` (entry card on the Strength tab): strength circuit (original with video timestamps, the two required changes, modified 3-round version) and core workout (24 moves in 4 groups with keep/core/optional/skip status, reasons, 16-move follow-along version), plus when-to-use table and fatigue notes. Timestamps become links to the video once `videoUrl` is filled in `src/data/plans/benWorkouts.ts`.
 - Hansons 18-week running schedule (2026 Tokyo Marathon, original dates) on a new "Runs" tab of `/plan`: collapsible W1–W18 with each day's workout type, workout and distance, weekly mileage, and a pace row that follows the goal chosen on the Paces tab. Two sheet values that don't add up (W13 Tuesday, W18 Saturday) are kept as-is with a ⚠ note. The strength tab is renamed from "Weeks" to "Strength". Data in `src/data/plans/hansonsSchedule.ts`.
 - Hansons plan notes on the Paces tab: 课表重点 (speed / easy / long / tempo run guidance), 术语解说 (workout notation such as WU, CD, MP-10) and 训练日调换原则 (rules for swapping training days). Data in `src/data/plans/hansonsNotes.ts`.
 - Hansons marathon pace chart on a new "Paces" tab of `/plan`: pick a marathon goal (remembered per browser, default 4:00) to see its recovery/easy/long/tempo/strength paces, race paces, predicted PBs and interval rep times, plus the full 26-goal table with the chosen row highlighted. Data in `src/data/plans/hansonsPaces.ts`.
