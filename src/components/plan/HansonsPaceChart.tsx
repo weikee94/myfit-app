@@ -1,4 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
+import HansonsNotes from "@/components/plan/HansonsNotes";
 import { cn } from "@/lib/utils";
 import { usePaceGoal } from "@/store/paceGoalStore";
 import {
@@ -67,6 +68,8 @@ export default function HansonsPaceChart() {
           ))}
         </CardContent>
       </Card>
+
+      <HansonsNotes />
 
       <Card>
         <CardContent className="p-4">
