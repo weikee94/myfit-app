@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Flag, X } from "lucide-react";
+import { Plus, Flag, X, Dumbbell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -32,7 +32,7 @@ export default function ActiveWorkoutPanel() {
   const timer        = useElapsedTime(session.startedAt);
 
   const handleAddExercise = (ex: Exercise) => {
-    session.addExercise({ id: ex.id, name: ex.name });
+    session.addExercise({ id: ex.id, name: ex.name, demo_url: ex.demo_url, demo_type: ex.demo_type });
   };
 
   const handleFinish = async () => {
@@ -72,51 +72,69 @@ export default function ActiveWorkoutPanel() {
         </p>
       )}
 
-      {session.exercises.map((ex) => (
-        <Card key={ex.exercise_id}>
-          <CardHeader className="flex-row items-center justify-between p-4 pb-2">
-            <CardTitle className="text-base">{ex.exercise_name}</CardTitle>
-            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => session.removeExercise(ex.exercise_id)}>
-              <X className="h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent className="p-4 pt-0">
-            <div className="grid grid-cols-[32px_1fr_1fr_1fr_36px_36px] gap-1.5 pb-1">
-              <span className="text-center text-xs text-muted-foreground">#</span>
-              <span className="text-center text-xs text-muted-foreground">kg</span>
-              <span className="text-center text-xs text-muted-foreground">Reps</span>
-              <span className="text-center text-xs text-muted-foreground">RPE</span>
-              <span />
-              <span />
-            </div>
-            <Separator className="mb-2" />
-            <div className="flex flex-col gap-1">
-              {ex.sets.map((s) => (
-                <SetRow
-                  key={s.set_number}
-                  setNumber={s.set_number}
-                  set={s}
-                  onChange={(data) => session.updateSet(ex.exercise_id, s.set_number, data)}
-                  onDelete={() => {
-                    const remaining = ex.sets.filter((x) => x.set_number !== s.set_number);
-                    session.removeExercise(ex.exercise_id);
-                    session.addExercise({ id: ex.exercise_id, name: ex.exercise_name });
-                    remaining.forEach(() => session.addSet(ex.exercise_id));
-                  }}
-                />
-              ))}
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="mt-2 w-full text-muted-foreground"
-              onClick={() => session.addSet(ex.exercise_id)}
-            >
-              <Plus className="mr-1 h-3.5 w-3.5" /> Add Set
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+      {session.exercises.map((ex) => {
+        const hasImage = !!ex.demo_url && (ex.demo_type === "image" || ex.demo_type === "gif");
+        return (
+          <Card key={ex.exercise_id}>
+            <CardHeader className="flex-row items-center justify-between gap-3 p-3 pb-2">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="h-12 w-12 shrink-0 overflow-hidden rounded-md bg-muted relative">
+                  <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                    <Dumbbell className="h-5 w-5" />
+                  </div>
+                  {hasImage && (
+                    <img
+                      src={ex.demo_url!}
+                      alt={ex.exercise_name}
+                      className="absolute inset-0 h-full w-full object-contain"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    />
+                  )}
+                </div>
+                <CardTitle className="text-base truncate">{ex.exercise_name}</CardTitle>
+              </div>
+              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={() => session.removeExercise(ex.exercise_id)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent className="p-3 pt-0">
+              <div className="grid grid-cols-[32px_1fr_1fr_1fr_36px_36px] gap-1.5 pb-1">
+                <span className="text-center text-xs text-muted-foreground">#</span>
+                <span className="text-center text-xs text-muted-foreground">kg</span>
+                <span className="text-center text-xs text-muted-foreground">Reps</span>
+                <span className="text-center text-xs text-muted-foreground">RPE</span>
+                <span />
+                <span />
+              </div>
+              <Separator className="mb-2" />
+              <div className="flex flex-col gap-1">
+                {ex.sets.map((s) => (
+                  <SetRow
+                    key={s.set_number}
+                    setNumber={s.set_number}
+                    set={s}
+                    onChange={(data) => session.updateSet(ex.exercise_id, s.set_number, data)}
+                    onDelete={() => {
+                      const remaining = ex.sets.filter((x) => x.set_number !== s.set_number);
+                      session.removeExercise(ex.exercise_id);
+                      session.addExercise({ id: ex.exercise_id, name: ex.exercise_name, demo_url: ex.demo_url, demo_type: ex.demo_type });
+                      remaining.forEach(() => session.addSet(ex.exercise_id));
+                    }}
+                  />
+                ))}
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2 w-full text-muted-foreground"
+                onClick={() => session.addSet(ex.exercise_id)}
+              >
+                <Plus className="mr-1 h-3.5 w-3.5" /> Add Set
+              </Button>
+            </CardContent>
+          </Card>
+        );
+      })}
 
       <ExerciseSearchModal open={showSearch} onClose={() => setShowSearch(false)} onSelect={handleAddExercise} />
     </div>
