@@ -6,10 +6,10 @@ import type { WeekSummary } from "@/types/workout";
 interface Props { data: WeekSummary }
 
 const SPORTS = [
-  { key: "swimMinutes"     as const, icon: Waves,          label: "Swim",     color: "text-[#0ea5e9]", isMin: true  },
-  { key: "bikeMinutes"     as const, icon: Bike,           label: "Bike",     color: "text-[#f59e0b]", isMin: true  },
-  { key: "runMinutes"      as const, icon: FootprintsIcon, label: "Run",      color: "text-[#22c55e]", isMin: true  },
-  { key: "strengthSessions"as const, icon: Dumbbell,       label: "Strength", color: "text-[#a855f7]", isMin: false },
+  { key: "swimMinutes"     as const, icon: Waves,          label: "Swim",     color: "text-swim",     isMin: true  },
+  { key: "bikeMinutes"     as const, icon: Bike,           label: "Bike",     color: "text-bike",     isMin: true  },
+  { key: "runMinutes"      as const, icon: FootprintsIcon, label: "Run",      color: "text-run",      isMin: true  },
+  { key: "strengthSessions"as const, icon: Dumbbell,       label: "Strength", color: "text-strength", isMin: false },
 ];
 
 export default function WeekSummaryCard({ data }: Props) {

@@ -65,7 +65,7 @@ export default function NewWorkoutPage() {
           <button
             onClick={handleStartStrength}
             disabled={createWorkout.isPending}
-            className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#a855f7]/40 text-[#a855f7] transition-colors hover:bg-[#a855f7]/10"
+            className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-strength/40 text-strength transition-colors hover:bg-strength/10"
           >
             <span className="text-3xl">🏋️</span>
             <span className="font-medium">{createWorkout.isPending ? "Starting…" : "Start Strength Session"}</span>
