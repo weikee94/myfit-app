@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
+  // Touch screens don't keep a stuck hover highlight after a tap.
+  future: { hoverOnlyWhenSupported: true },
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {

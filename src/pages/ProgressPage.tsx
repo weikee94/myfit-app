@@ -20,7 +20,7 @@ export default function ProgressPage() {
       <select
         value={selectedId || exerciseId}
         onChange={(e) => setSelectedId(e.target.value)}
-        className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+        className="h-9 w-full rounded-md border border-input bg-background px-3 text-base focus:outline-none md:text-sm focus:ring-1 focus:ring-ring"
       >
         {exercises.map((ex) => (
           <option key={ex.id} value={ex.id}>{ex.name}</option>

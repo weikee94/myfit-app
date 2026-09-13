@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Installable web app: `manifest.webmanifest`, app icons (`apple-touch-icon.png`, 192/512 and maskable PNGs, 32px favicon) and iOS home-screen meta tags, so "Add to Home Screen" opens MyFit full-screen with its own icon. No service worker / offline mode.
 - Ben's two follow-along workouts at `/plan/ben` (entry card on the Strength tab): strength circuit (original with video timestamps, the two required changes, modified 3-round version) and core workout (24 moves in 4 groups with keep/core/optional/skip status, reasons, 16-move follow-along version), plus when-to-use table and fatigue notes. Timestamps become links to the video once `videoUrl` is filled in `src/data/plans/benWorkouts.ts`.
 - Hansons 18-week running schedule (2026 Tokyo Marathon, original dates) on a new "Runs" tab of `/plan`: collapsible W1–W18 with each day's workout type, workout and distance, weekly mileage, and a pace row that follows the goal chosen on the Paces tab. Two sheet values that don't add up (W13 Tuesday, W18 Saturday) are kept as-is with a ⚠ note. The strength tab is renamed from "Weeks" to "Strength". Data in `src/data/plans/hansonsSchedule.ts`.
 - Hansons plan notes on the Paces tab: 课表重点 (speed / easy / long / tempo run guidance), 术语解说 (workout notation such as WU, CD, MP-10) and 训练日调换原则 (rules for swapping training days). Data in `src/data/plans/hansonsNotes.ts`.
@@ -24,5 +25,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recharts grid and axis colors in `TrainingLoadChart` and `OverloadHistoryChart` now use `currentColor`, so they update on theme change.
 - Desktop navigation in the top bar (icons from `md`, labels from `lg`); nav items shared with the mobile bottom nav via `navItems.ts`.
 
+- Mobile-first layout tuned for iPhone 13 Pro (390×844): top bar, bottom nav and page padding respect the notch and home indicator (`viewport-fit=cover` + safe-area insets); buttons, back buttons, tabs, filter chips and the dialog close button have 44px touch targets on mobile; inputs and selects use 16px text on mobile (no zoom on focus) and the `maximum-scale` zoom lock is removed; tap feedback via `active:` styles and `hoverOnlyWhenSupported`. Desktop sizes unchanged.
+- Theme toggle on mobile is a single 44px button that cycles light → dark → system (desktop keeps the three-button control).
+- Plan pages: explanation text raised from 12px to 14px, the Runna heading now shows only on the Strength tab, and week titles wrap to two lines instead of being cut off.
+- Active workout session is stored in `localStorage` instead of `sessionStorage`, so it survives iOS closing the home-screen app.
+
 ### Fixed
+- Missing favicon (`/favicon.ico` was referenced but never existed).
 - Refreshing any page other than `/` on Vercel returned 404: added `vercel.json` rewriting all paths to `index.html` so client-side routes load on reload and direct links.

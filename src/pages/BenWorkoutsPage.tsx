@@ -39,7 +39,7 @@ function MoveList({ moves, videoUrl = "" }: { moves: BenMove[]; videoUrl?: strin
             <Timestamp videoUrl={videoUrl} time={m.time} />
             <div className="min-w-0 flex-1">
               <p className={cn("text-sm", m.highlight && "font-semibold", skipped && "line-through")}>{m.name}</p>
-              {m.trains && <p className="text-xs text-muted-foreground">{m.trains}</p>}
+              {m.trains && <p className="text-sm text-muted-foreground">{m.trains}</p>}
             </div>
             {m.duration && <span className="shrink-0 pt-0.5 text-xs tabular-nums text-muted-foreground">{m.duration}</span>}
             {m.status && <Badge variant={STATUS[m.status].variant} className="shrink-0">{STATUS[m.status].label}</Badge>}
@@ -73,8 +73,8 @@ export default function BenWorkoutsPage() {
             <CardContent className="flex flex-col gap-1 p-3 text-sm">
               <p className="font-semibold">{o.name}</p>
               <p className={cn("font-medium", o.hard ? "text-destructive" : "text-run")}>疲劳 · {o.fatigue}</p>
-              <p className="text-xs text-muted-foreground">{o.slot}</p>
-              <p className="text-xs text-muted-foreground">{o.frequency}</p>
+              <p className="text-sm text-muted-foreground">{o.slot}</p>
+              <p className="text-sm text-muted-foreground">{o.frequency}</p>
             </CardContent>
           </Card>
         ))}
@@ -140,7 +140,7 @@ export default function BenWorkoutsPage() {
               <div key={u.situation} className="flex flex-col gap-0.5 px-3 py-2 text-sm">
                 <p className="font-medium">{u.situation}</p>
                 <p className="text-strength">{u.which}</p>
-                <p className="text-xs text-muted-foreground">{u.why}</p>
+                <p className="text-sm text-muted-foreground">{u.why}</p>
               </div>
             ))}
           </div>

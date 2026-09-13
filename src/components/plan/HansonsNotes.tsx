@@ -31,11 +31,11 @@ export default function HansonsNotes() {
       <Card>
         <CardContent className="p-4">
           <p className={SECTION_LABEL}>术语解说</p>
-          <code className="mb-3 block break-all rounded-md bg-muted px-2.5 py-2 font-mono text-xs">{HANSONS_TERMS.example}</code>
+          <code className="mb-3 block break-words rounded-md bg-muted px-2.5 py-2 font-mono text-sm">{HANSONS_TERMS.example}</code>
           <dl className="flex flex-col gap-2 text-sm">
             {HANSONS_TERMS.terms.map((t) => (
               <div key={t.term}>
-                <dt className="break-all font-mono text-xs font-semibold">{t.term}</dt>
+                <dt className="break-words font-mono text-sm font-semibold">{t.term}</dt>
                 <dd className="text-muted-foreground">{t.meaning}</dd>
               </div>
             ))}

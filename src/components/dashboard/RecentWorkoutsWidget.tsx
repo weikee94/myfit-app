@@ -21,7 +21,7 @@ export default function RecentWorkoutsWidget({ workouts }: { workouts: Workout[]
           <button
             key={w.id}
             onClick={() => navigate(`/workouts/${w.id}`)}
-            className="flex items-center justify-between py-2.5 text-left hover:bg-accent/30 rounded-lg px-1 transition-colors"
+            className="flex items-center justify-between py-2.5 text-left hover:bg-accent/30 active:bg-accent/30 rounded-lg px-1 transition-colors"
           >
             <div>
               <p className="text-sm font-medium">{w.name ?? sportLabel(w.type)}</p>

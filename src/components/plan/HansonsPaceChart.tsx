@@ -43,7 +43,7 @@ export default function HansonsPaceChart() {
             <select
               value={selected.goal}
               onChange={(e) => setGoal(e.target.value)}
-              className="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-sm tabular-nums shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className="h-9 flex-1 rounded-md border border-input bg-transparent px-3 text-base tabular-nums shadow-sm md:text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             >
               {HANSONS_PACE_ROWS.map((r) => (
                 <option key={r.goal} value={r.goal}>{r.goal}</option>

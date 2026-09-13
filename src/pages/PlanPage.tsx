@@ -15,11 +15,11 @@ function WeekList() {
   return (
     <div className="flex flex-col gap-2">
       <Link to="/plan/ben">
-        <Card className="transition-colors hover:bg-accent">
+        <Card className="transition-colors hover:bg-accent active:bg-accent">
           <CardContent className="flex items-center gap-3 p-4">
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium">Ben 专属 · 两套跟练课</p>
-              <p className="text-xs text-muted-foreground">力量循环 · 硬课 ／ 核心跟练 · 低疲劳</p>
+              <p className="text-sm text-muted-foreground">力量循环 · 硬课 ／ 核心跟练 · 低疲劳</p>
             </div>
             <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
           </CardContent>
@@ -40,12 +40,12 @@ function WeekList() {
 
         return (
           <Link key={n} to={`/plan/${n}`}>
-            <Card className="transition-colors hover:bg-accent">
+            <Card className="transition-colors hover:bg-accent active:bg-accent">
               <CardContent className="flex items-center gap-3 p-4">
                 <span className="w-8 text-sm font-semibold">W{n}</span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium">{week.sessions.map((s) => s.title).join(" · ")}</p>
-                  <p className="text-xs text-muted-foreground">{week.subtitle} · <span className="text-strength">{week.focus}</span></p>
+                  <p className="line-clamp-2 text-sm font-medium">{week.sessions.map((s) => s.title).join(" · ")}</p>
+                  <p className="text-sm text-muted-foreground">{week.subtitle} · <span className="text-strength">{week.focus}</span></p>
                 </div>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
               </CardContent>
@@ -87,7 +87,7 @@ function RulesReference() {
                   <span className="text-muted-foreground"> · {r.count}</span>
                 </p>
                 <p className="font-medium text-strength">→ {r.to}</p>
-                <p className="text-xs text-muted-foreground">{r.why}</p>
+                <p className="text-sm text-muted-foreground">{r.why}</p>
               </div>
             ))}
           </div>
@@ -146,11 +146,6 @@ function RulesReference() {
 export default function PlanPage() {
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-xl font-bold">{plan.name}</h2>
-        <p className="text-sm text-muted-foreground">{plan.summary}</p>
-      </div>
-
       <Tabs defaultValue="weeks">
         <TabsList className="w-full">
           <TabsTrigger value="weeks" className="flex-1">Strength</TabsTrigger>
@@ -158,7 +153,14 @@ export default function PlanPage() {
           <TabsTrigger value="rules" className="flex-1">Rules</TabsTrigger>
           <TabsTrigger value="paces" className="flex-1">Paces</TabsTrigger>
         </TabsList>
-        <TabsContent value="weeks" className="mt-4"><WeekList /></TabsContent>
+        <TabsContent value="weeks" className="mt-4 flex flex-col gap-4">
+          {/* The Runna heading belongs to the strength plan only, not Runs / Rules / Paces */}
+          <div>
+            <h2 className="text-xl font-bold">{plan.name}</h2>
+            <p className="text-sm text-muted-foreground">{plan.summary}</p>
+          </div>
+          <WeekList />
+        </TabsContent>
         <TabsContent value="runs" className="mt-4"><HansonsSchedule /></TabsContent>
         <TabsContent value="rules" className="mt-4"><RulesReference /></TabsContent>
         <TabsContent value="paces" className="mt-4"><HansonsPaceChart /></TabsContent>

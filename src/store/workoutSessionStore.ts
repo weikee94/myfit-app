@@ -99,6 +99,6 @@ export const useWorkoutSession = create<WorkoutSessionState>()(
       clearSession: () =>
         set({ workoutId: null, workoutType: null, startedAt: null, exercises: [], isActive: false }),
     }),
-    { name: "myfit-workout-session", storage: createJSONStorage(() => sessionStorage) }
+    { name: "myfit-workout-session", storage: createJSONStorage(() => localStorage) }
   )
 );

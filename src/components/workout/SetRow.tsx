@@ -24,7 +24,7 @@ function NumInput({ value, placeholder, onChange, className }: {
       placeholder={placeholder}
       onChange={(e) => onChange(e.target.value === "" ? undefined : Number(e.target.value))}
       className={cn(
-        "h-9 w-full rounded-md border border-input bg-transparent px-2 py-1 text-center text-sm tabular-nums",
+        "h-9 w-full rounded-md border border-input bg-transparent px-2 py-1 text-center text-base tabular-nums md:text-sm",
         "focus:outline-none focus:ring-1 focus:ring-ring",
         className
       )}

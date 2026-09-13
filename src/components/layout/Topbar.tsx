@@ -18,7 +18,8 @@ export default function Topbar() {
   const title = TITLES[pathname] ?? "MyFit";
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-30 border-b bg-background/95 pt-[env(safe-area-inset-top)] backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex h-14 items-center justify-between gap-2 px-4">
       <div className="flex min-w-0 items-center gap-2">
         <span className="text-lg font-semibold tracking-tight">{title}</span>
       </div>
@@ -43,6 +44,7 @@ export default function Topbar() {
         ))}
       </nav>
       <ThemeToggle className="shrink-0" />
+      </div>
     </header>
   );
 }

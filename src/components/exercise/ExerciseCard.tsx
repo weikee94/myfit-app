@@ -29,7 +29,7 @@ export default function ExerciseCard({ exercise, onClick, showBenefit, compact }
   return (
     <Card
       onClick={handleClick}
-      className={cn("cursor-pointer transition-colors hover:bg-accent/50", compact && "shadow-none")}
+      className={cn("cursor-pointer transition-colors hover:bg-accent/50 active:bg-accent/50", compact && "shadow-none")}
     >
       <CardContent className={cn("flex gap-3", compact ? "p-3" : "p-4")}>
         <div className={cn(

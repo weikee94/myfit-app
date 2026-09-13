@@ -97,7 +97,7 @@ export default function HansonsSchedule() {
                       </div>
                       {day.km !== undefined && <span className="shrink-0 text-sm tabular-nums">{day.km}</span>}
                     </div>
-                    {day.warning && <p className="ml-[4.75rem] mt-1 text-xs text-destructive">⚠ {day.warning}</p>}
+                    {day.warning && <p className="ml-[4.75rem] mt-1 text-sm text-destructive">⚠ {day.warning}</p>}
                   </div>
                 );
               })}
