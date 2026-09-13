@@ -3,7 +3,7 @@ import { HANSONS_SCHEDULE_RULES, HANSONS_TERMS, HANSONS_WORKOUT_NOTES } from "@/
 
 const SECTION_LABEL = "mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground";
 
-function BulletList({ points }: { points: string[] }) {
+export function BulletList({ points }: { points: string[] }) {
   return (
     <ul className="flex list-disc flex-col gap-1 pl-5 text-sm text-muted-foreground marker:text-strength">
       {points.map((p) => <li key={p}>{p}</li>)}
