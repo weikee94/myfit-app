@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Runna marathon strength plan viewer: `/plan` lists W1–W17 (W7–W17 as placeholders) plus a Rules tab with the replacement rules, push:pull table and the exercises to keep; `/plan/:week` shows each session's supersets with original → replacement and the reasoning. Content is a static data file (`src/data/plans/runnaMarathon.ts`); new "Plan" tab in the bottom nav.
 - Light / Dark / System theme switcher (`ThemeToggle`) in the top bar and on the login page, persisted to `localStorage` via a Zustand `themeStore`.
 - Inline pre-paint script in `index.html` that applies the stored theme before first render, avoiding a flash of the wrong mode; `theme-color` meta follows the active theme.
 - `--swim`, `--bike`, `--run`, `--strength` CSS variables with separate light and dark values.
