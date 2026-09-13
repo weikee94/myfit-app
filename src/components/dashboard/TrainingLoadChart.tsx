@@ -32,9 +32,9 @@ export default function TrainingLoadChart({ workouts }: Props) {
       <CardContent>
         <ResponsiveContainer width="100%" height={180}>
           <BarChart data={data} margin={{ top: 0, right: 0, bottom: 0, left: -28 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-            <XAxis dataKey="week" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
-            <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+            <CartesianGrid strokeDasharray="3 3" className="text-border" stroke="currentColor" />
+            <XAxis dataKey="week" tick={{ fontSize: 10, fill: "currentColor" }} className="text-muted-foreground" stroke="currentColor" />
+            <YAxis tick={{ fontSize: 10, fill: "currentColor" }} className="text-muted-foreground" stroke="currentColor" />
             <Tooltip
               contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
             />

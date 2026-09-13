@@ -25,10 +25,10 @@ export default function OverloadHistoryChart({ data, exerciseName }: Props) {
       <p className="mb-3 text-sm font-medium">{exerciseName} — Progress</p>
       <ResponsiveContainer width="100%" height={220}>
         <ComposedChart data={data} margin={{ top: 4, right: 4, bottom: 0, left: -16 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-          <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-          <YAxis yAxisId="left"  tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-          <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+          <CartesianGrid strokeDasharray="3 3" className="text-border" stroke="currentColor" />
+          <XAxis dataKey="date" tick={{ fontSize: 11, fill: "currentColor" }} className="text-muted-foreground" stroke="currentColor" />
+          <YAxis yAxisId="left"  tick={{ fontSize: 11, fill: "currentColor" }} className="text-muted-foreground" stroke="currentColor" />
+          <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11, fill: "currentColor" }} className="text-muted-foreground" stroke="currentColor" />
           <Tooltip
             contentStyle={{ background: "hsl(var(--card))", border: "1px solid hsl(var(--border))", borderRadius: 8, fontSize: 12 }}
           />

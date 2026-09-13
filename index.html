@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="/favicon.ico" />
@@ -7,6 +7,25 @@
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="description" content="Triathlon + Strength training tracker with progressive overload" />
     <title>MyFit — Triathlon & Strength Tracker</title>
+    <script>
+      // Applies the stored theme before first paint so the page never flashes the wrong mode.
+      (function () {
+        var theme = "system";
+        try {
+          var stored = localStorage.getItem("myfit-theme");
+          if (stored) {
+            var parsed = JSON.parse(stored).state.theme;
+            if (parsed === "light" || parsed === "dark") theme = parsed;
+          }
+        } catch (e) {}
+        var dark =
+          theme === "dark" ||
+          (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute("content", dark ? "#0a0a0a" : "#ffffff");
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
