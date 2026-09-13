@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import HansonsPaceChart from "@/components/plan/HansonsPaceChart";
 import { cn } from "@/lib/utils";
 import { RUNNA_MARATHON_PLAN as plan } from "@/data/plans/runnaMarathon";
 
@@ -142,9 +143,11 @@ export default function PlanPage() {
         <TabsList className="w-full">
           <TabsTrigger value="weeks" className="flex-1">Weeks</TabsTrigger>
           <TabsTrigger value="rules" className="flex-1">Rules</TabsTrigger>
+          <TabsTrigger value="paces" className="flex-1">Paces</TabsTrigger>
         </TabsList>
         <TabsContent value="weeks" className="mt-4"><WeekList /></TabsContent>
         <TabsContent value="rules" className="mt-4"><RulesReference /></TabsContent>
+        <TabsContent value="paces" className="mt-4"><HansonsPaceChart /></TabsContent>
       </Tabs>
     </div>
   );
