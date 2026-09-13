@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, PlayCircle } from "lucide-react";
+import ExerciseDemoSheet from "@/components/exercise/ExerciseDemoSheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,23 +31,30 @@ function Timestamp({ videoUrl, time }: { videoUrl: string; time?: string }) {
   );
 }
 
+function MoveRow({ move: m, videoUrl }: { move: BenMove; videoUrl: string }) {
+  const [open, setOpen] = useState(false);
+  const skipped = m.status === "skip";
+
+  return (
+    <div className={cn("flex items-start gap-3 px-3 py-2", skipped && "text-muted-foreground")}>
+      <Timestamp videoUrl={videoUrl} time={m.time} />
+      {/* Name block opens the demo; the timestamp link stays a separate tap target */}
+      <button type="button" onClick={() => setOpen(true)} className="min-h-11 min-w-0 flex-1 rounded-md text-left transition-colors active:bg-accent md:min-h-0">
+        <p className={cn("inline text-sm", m.highlight && "font-semibold", skipped && "line-through")}>{m.name}</p>
+        <PlayCircle className="ml-1.5 inline h-3.5 w-3.5 align-[-2px] text-muted-foreground" aria-hidden />
+        {m.trains && <p className="text-sm text-muted-foreground">{m.trains}</p>}
+      </button>
+      {m.duration && <span className="shrink-0 pt-0.5 text-xs tabular-nums text-muted-foreground">{m.duration}</span>}
+      {m.status && <Badge variant={STATUS[m.status].variant} className="shrink-0">{STATUS[m.status].label}</Badge>}
+      <ExerciseDemoSheet name={m.name} open={open} onOpenChange={setOpen} />
+    </div>
+  );
+}
+
 function MoveList({ moves, videoUrl = "" }: { moves: BenMove[]; videoUrl?: string }) {
   return (
     <div className="divide-y rounded-lg border">
-      {moves.map((m) => {
-        const skipped = m.status === "skip";
-        return (
-          <div key={`${m.time ?? ""}${m.name}`} className={cn("flex items-start gap-3 px-3 py-2", skipped && "text-muted-foreground")}>
-            <Timestamp videoUrl={videoUrl} time={m.time} />
-            <div className="min-w-0 flex-1">
-              <p className={cn("text-sm", m.highlight && "font-semibold", skipped && "line-through")}>{m.name}</p>
-              {m.trains && <p className="text-sm text-muted-foreground">{m.trains}</p>}
-            </div>
-            {m.duration && <span className="shrink-0 pt-0.5 text-xs tabular-nums text-muted-foreground">{m.duration}</span>}
-            {m.status && <Badge variant={STATUS[m.status].variant} className="shrink-0">{STATUS[m.status].label}</Badge>}
-          </div>
-        );
-      })}
+      {moves.map((m) => <MoveRow key={`${m.time ?? ""}${m.name}`} move={m} videoUrl={videoUrl} />)}
     </div>
   );
 }

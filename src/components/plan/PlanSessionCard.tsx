@@ -1,4 +1,6 @@
-import { ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight, PlayCircle } from "lucide-react";
+import ExerciseDemoSheet from "@/components/exercise/ExerciseDemoSheet";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -19,23 +21,39 @@ const NOTE_STYLES: Record<PlanNoteKind, string> = {
 
 function ExerciseLine({ exercise }: { exercise: PlanExercise }) {
   const { name, change, to, note, highlight } = exercise;
+  const [open, setOpen] = useState(false);
+  const isReplace = change === "replace" && !!to;
 
-  if (change === "replace") {
-    return (
-      <li className="flex flex-wrap items-center gap-x-1.5">
-        <span className="text-muted-foreground line-through">{name}</span>
-        <ArrowRight className="h-3 w-3 text-muted-foreground" aria-label="换成" />
-        <span className="font-medium text-strength">{to}</span>
-      </li>
-    );
-  }
-
+  // The whole line is the tap target (44px on mobile); a replaced line opens the replacement's demo.
   return (
-    <li className="flex flex-wrap items-center gap-x-1.5">
-      <span className={cn(highlight && "font-semibold")}>{name}</span>
-      {change === "modify" && (
-        <span className="rounded bg-strength/15 px-1.5 text-xs font-medium text-strength">{note}</span>
-      )}
+    <li>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex min-h-11 w-full flex-wrap items-center gap-x-1.5 rounded-md text-left transition-colors active:bg-accent md:min-h-0"
+      >
+        {isReplace ? (
+          <>
+            <span className="text-muted-foreground line-through">{name}</span>
+            <ArrowRight className="h-3 w-3 text-muted-foreground" aria-label="换成" />
+            <span className="font-medium text-strength">{to}</span>
+          </>
+        ) : (
+          <>
+            <span className={cn(highlight && "font-semibold")}>{name}</span>
+            {change === "modify" && (
+              <span className="rounded bg-strength/15 px-1.5 text-xs font-medium text-strength">{note}</span>
+            )}
+          </>
+        )}
+        <PlayCircle className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden />
+      </button>
+      <ExerciseDemoSheet
+        name={isReplace ? to! : name}
+        original={isReplace ? name : undefined}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </li>
   );
 }
