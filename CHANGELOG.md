@@ -18,3 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sport colors (`swim`/`bike`/`run`/`strength`) are now theme-aware Tailwind tokens; hardcoded hex classes in badges, workout type selector, week summary card and new workout page replaced with the tokens.
 - Light palette tuned for contrast (background, foreground, muted, destructive).
 - Recharts grid and axis colors in `TrainingLoadChart` and `OverloadHistoryChart` now use `currentColor`, so they update on theme change.
+- Desktop navigation in the top bar (icons from `md`, labels from `lg`); nav items shared with the mobile bottom nav via `navItems.ts`.
+
+### Fixed
+- Refreshing any page other than `/` on Vercel returned 404: added `vercel.json` rewriting all paths to `index.html` so client-side routes load on reload and direct links.
