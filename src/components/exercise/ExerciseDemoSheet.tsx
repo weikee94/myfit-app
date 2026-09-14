@@ -2,19 +2,11 @@ import { useEffect, useState } from "react";
 import { Play } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { buttonVariants } from "@/components/ui/button";
+import StickFigure from "@/components/exercise/StickFigure";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
 import { findDemo, youtubeSearchUrl } from "@/data/exerciseDemos";
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReduced(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-  return reduced;
-}
+import { findStickFigure } from "@/data/stickFigures";
 
 // free-exercise-db ships two photos per exercise (start / end position); alternating them reads like a GIF.
 function DemoFrames({ dbId, label }: { dbId: string; label: string }) {
@@ -69,6 +61,7 @@ export default function ExerciseDemoSheet({ name, original, open, onOpenChange }
   }, [open, name]);
 
   const demo = findDemo(showing);
+  const stick = demo.dbId ? undefined : findStickFigure(showing);   // photos win; stick figures only fill gaps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -88,6 +81,12 @@ export default function ExerciseDemoSheet({ name, original, open, onOpenChange }
 
         {demo.dbId ? (
           <DemoFrames dbId={demo.dbId} label={showing} />
+        ) : stick ? (
+          <div className="flex flex-col gap-1.5">
+            <StickFigure spec={stick} label={showing} />
+            <p className="text-center text-xs text-muted-foreground">示意 · 以 YouTube 真人示范为准</p>
+            {stick.cue && <p className="text-center text-sm">{stick.cue}</p>}
+          </div>
         ) : (
           <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">暂无免费示范图，点下方看 YouTube 示范。</p>
         )}
