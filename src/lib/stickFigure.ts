@@ -10,7 +10,7 @@ export interface Pose {
   torso:   number;                     // hip → neck
   head:    number;                     // neck → head centre
   armNear: [number, number];           // upper arm, forearm — near side, drawn solid
-  armFar:  [number, number];           // far side, drawn faded
+  armFar:  [number, number];           // far side, drawn in a quieter solid shade
   legNear: [number, number, number];   // thigh, shin, foot
   legFar:  [number, number, number];
 }
@@ -123,40 +123,65 @@ const points = (ps: Point[]) => ps.map((p) => `${fmt(p[0])},${fmt(p[1])}`).join(
 // Pass `keyframe` for a still image of that keyframe (reduced motion).
 export function stickFigureSvg(spec: StickFigureSpec, opts: { keyframe?: number } = {}): string {
   const still = opts.keyframe !== undefined;
-  const { poses, keyTimes } = still ? { poses: [spec.keyframes[opts.keyframe!]], keyTimes: [0] } : sampleFrames(spec);
+  const sampled = sampleFrames(spec);
+  const { poses, keyTimes } = still ? { poses: [spec.keyframes[opts.keyframe!]], keyTimes: [0] } : sampled;
+  // One camera for the entire loop, including reduced-motion stills. Padding covers
+  // the head, rounded strokes and held weights, as well as rounding during SMIL.
+  const extent = sampled.poses.flatMap((pose) => {
+    const j = poseJoints(pose);
+    return [j.hip, j.neck, j.head, ...j.armNear, ...j.armFar, ...j.legNear, ...j.legFar];
+  });
+  for (const prop of spec.props ?? []) {
+    if (prop.kind === "rect") extent.push([prop.x, prop.y], [prop.x + prop.w, prop.y + prop.h]);
+  }
+  const minX = Math.min(...extent.map(([x]) => x)) - 9;
+  const maxX = Math.max(...extent.map(([x]) => x)) + 9;
+  const minY = Math.min(...extent.map(([, y]) => y)) - 9;
+  const maxY = Math.max(...extent.map(([, y]) => y), ...(spec.props ?? []).filter((p) => p.kind === "floor").map((p) => p.y)) + 9;
+  const size = Math.max(maxX - minX, maxY - minY);
+  const cameraX = (minX + maxX - size) / 2;
+  const cameraY = (minY + maxY - size) / 2;
   const frames = poses.map(poseJoints);
   const kt = keyTimes.map((t) => t.toFixed(3)).join(";");
 
   const animate = (attr: string, values: string[]) =>
     still ? "" : `<animate attributeName="${attr}" dur="${spec.duration}s" repeatCount="indefinite" calcMode="linear" keyTimes="${kt}" values="${values.join(";")}"/>`;
-  const stroke = 'fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"';
-  const limb = (pick: (j: Joints) => Point[]) =>
-    `<polyline ${stroke} points="${points(pick(frames[0]))}">${animate("points", frames.map((j) => points(pick(j))))}</polyline>`;
+  const near = "hsl(var(--strength, 271 81% 50%))";
+  const far = "hsl(var(--athlete-far, 271 22% 58%))";
+  const neutral = "hsl(var(--muted-foreground, 0 0% 42%))";
+  const stage = "hsl(var(--athlete-stage, 271 45% 97%))";
+  const limb = (pick: (j: Joints) => Point[], color = near, width = 4.2, outline = false) => {
+    const path = (stroke: string, strokeWidth: number) =>
+      `<polyline fill="none" stroke="${stroke}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round" points="${points(pick(frames[0]))}">${animate("points", frames.map((j) => points(pick(j))))}</polyline>`;
+    return (outline ? path(stage, width + 1.2) : "") + path(color, width);
+  };
   const weight = (side: "near" | "far") => {
     if (!spec.hold?.includes(side)) return "";
     const hands = frames.map((j) => (side === "near" ? j.armNear[2] : j.armFar[2]));
-    return `<rect width="6" height="3.5" rx="1" fill="currentColor" x="${fmt(hands[0][0] - 3)}" y="${fmt(hands[0][1])}">` +
+    return `<rect width="6" height="3.5" rx="1.2" fill="${neutral}" x="${fmt(hands[0][0] - 3)}" y="${fmt(hands[0][1])}">` +
       `${animate("x", hands.map((h) => fmt(h[0] - 3)))}${animate("y", hands.map((h) => fmt(h[1])))}</rect>`;
   };
 
   const props = (spec.props ?? []).map((p) =>
     p.kind === "floor"
-      ? `<line x1="2" x2="98" y1="${p.y}" y2="${p.y}" stroke="currentColor" stroke-opacity="0.35" stroke-width="1"/>`
-      : `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="1" fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-opacity="0.3" stroke-width="0.8"/>`
+      ? `<line x1="${fmt(cameraX + 5)}" x2="${fmt(cameraX + size - 5)}" y1="${p.y}" y2="${p.y}" stroke="${neutral}" stroke-opacity="0.3" stroke-width="1"/>`
+      : `<rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="1.2" fill="${neutral}" fill-opacity="0.1" stroke="currentColor" stroke-opacity="0.3" stroke-width="0.8"/>`
   ).join("");
 
   const heads = frames.map((j) => j.head);
   const head =
-    `<circle cx="${fmt(heads[0][0])}" cy="${fmt(heads[0][1])}" r="${BONE.headR}" fill="currentColor">` +
+    `<circle cx="${fmt(heads[0][0])}" cy="${fmt(heads[0][1])}" r="${BONE.headR}" fill="${near}" stroke="${stage}" stroke-width="0.8">` +
     `${animate("cx", heads.map((h) => fmt(h[0])))}${animate("cy", heads.map((h) => fmt(h[1])))}</circle>`;
-  const pelvis = spec.keyframes[0].pelvis !== undefined ? limb((j) => [j.legFar[0], j.legNear[0]]) : "";
+  const pelvis = spec.keyframes[0].pelvis !== undefined ? limb((j) => [j.legFar[0], j.legNear[0]], near, 6) : "";
 
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">` +
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${fmt(cameraX)} ${fmt(cameraY)} ${fmt(size)} ${fmt(size)}" width="100%" height="100%" aria-hidden="true" focusable="false">` +
     props +
-    `<g opacity="0.4">${limb((j) => j.armFar)}${limb((j) => j.legFar)}${weight("far")}</g>` +
-    limb((j) => [j.hip, j.neck]) + pelvis + head +
-    limb((j) => j.armNear) + limb((j) => j.legNear) + weight("near") +
+    limb((j) => j.legFar, far) + limb((j) => j.armFar, far) + weight("far") +
+    limb((j) => [j.neck, j.head], near, 3) +
+    limb((j) => [j.hip, j.neck], near, 8) + pelvis +
+    limb((j) => j.legNear, near, 4.2, true) +
+    limb((j) => j.armNear, near, 4.2, true) + weight("near") + head +
     `</svg>`
   );
 }

@@ -28,6 +28,8 @@
     --bike: 32 95% 40%;
     --run: 142 72% 33%;
     --strength: 271 81% 50%;
+    --athlete-far: 271 22% 58%;
+    --athlete-stage: 271 45% 97%;
     --radius: 0.5rem;
   }
 
@@ -54,6 +56,8 @@
     --bike: 38 92% 50%;
     --run: 142 71% 45%;
     --strength: 271 91% 65%;
+    --athlete-far: 271 22% 46%;
+    --athlete-stage: 271 20% 12%;
   }
 }
 

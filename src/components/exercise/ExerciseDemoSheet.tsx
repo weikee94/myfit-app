@@ -82,10 +82,10 @@ export default function ExerciseDemoSheet({ name, original, open, onOpenChange }
         {demo.dbId ? (
           <DemoFrames dbId={demo.dbId} label={showing} />
         ) : stick ? (
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-3">
             <StickFigure spec={stick} label={showing} />
+            {stick.cue && <p className="text-center text-sm font-medium leading-relaxed">{stick.cue}</p>}
             <p className="text-center text-xs text-muted-foreground">示意 · 以 YouTube 真人示范为准</p>
-            {stick.cue && <p className="text-center text-sm">{stick.cue}</p>}
           </div>
         ) : (
           <p className="rounded-lg bg-muted p-4 text-sm text-muted-foreground">暂无免费示范图，点下方看 YouTube 示范。</p>
