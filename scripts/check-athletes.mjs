@@ -14,17 +14,28 @@ const server = await createServer({
 });
 try {
   const { STICK_FIGURES, findStickFigure } = await server.ssrLoadModule('/src/data/stickFigures.ts');
-  const { stickFigureSvg, sampleFrames, muscleLabels } = await server.ssrLoadModule('/src/lib/stickFigure.ts');
+  const { stickFigureSvg, sampleFrames, muscleLabels, poseJoints, racketGeometry } = await server.ssrLoadModule('/src/lib/stickFigure.ts');
   const specs = [...new Set(Object.values(STICK_FIGURES))];
-  assert.equal(specs.length, 38);
+  assert.equal(specs.length, 39);
   assert.equal(findStickFigure('单腿提踵'), findStickFigure('single leg calf raise'));
   assert.equal(findStickFigure('单腿蹲'), findStickFigure('single leg squat'));
+  const badminton = findStickFigure('badminton forehand overhead ready');
+  assert.ok(badminton);
+  assert.deepEqual(badminton.keyframeLabels, ['准备', '架拍']);
+  assert.equal(badminton.muscleTargets, undefined);
   const ids = new Set();
   let animatedPaths = 0;
   for (const [index, spec] of specs.entries()) {
-    assert.ok(spec.muscleTargets.length, `Missing targets: ${index}`);
     assert.ok(muscleLabels(spec).every(Boolean));
     const sampled = sampleFrames(spec);
+    if (spec.equipment?.kind === 'racket') {
+      for (const pose of sampled.poses) {
+        const joints = poseJoints(pose);
+        const racket = racketGeometry(pose, joints);
+        assert.ok(racket);
+        assert.deepEqual(racket.hand, joints.armNear[2], 'Racket detached from near hand');
+      }
+    }
     assert.equal(sampled.keyTimes[0], 0);
     assert.equal(sampled.keyTimes.at(-1), 1);
     assert.ok(sampled.keyTimes.every((time, i) => i === 0 || time > sampled.keyTimes[i - 1]));
@@ -63,8 +74,9 @@ try {
       for (const [, ref] of output.matchAll(/url\(#([^)]+)\)/g)) assert.ok(localIds.includes(ref));
     }
     assert.equal((svg.match(/<rect width="6"/g) ?? []).length, spec.hold?.length ?? 0, 'Missing held weights');
+    assert.equal((svg.match(/data-equipment="racket"/g) ?? []).length, spec.equipment?.kind === 'racket' ? 1 : 0, 'Missing racket');
   }
-  console.log(`PASS: ${specs.length} athletes; ${animatedPaths} animated paths checked across full loops; targets, bounds, stills, aliases, paint IDs and weights verified.`);
+  console.log(`PASS: ${specs.length} athletes; ${animatedPaths} animated paths checked across full loops; bounds, stills, aliases, paint IDs, weights and racket attachment verified.`);
 } finally {
   await server.close();
 }

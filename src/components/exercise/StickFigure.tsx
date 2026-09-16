@@ -17,7 +17,7 @@ export default function StickFigure({ spec, label }: { spec: StickFigureSpec; la
       <div className="flex items-center justify-between px-4 pt-3 text-xs font-medium text-muted-foreground">
         <span>动作示意</span>
         <span className="rounded-full border border-strength/10 bg-background/60 px-2 py-1">
-          {spec.view === "front" ? "正面" : "侧面"}
+          {spec.viewLabel ?? (spec.view === "front" ? "正面" : "侧面")}
         </span>
       </div>
       {reduced ? (
@@ -26,11 +26,11 @@ export default function StickFigure({ spec, label }: { spec: StickFigureSpec; la
             <div key={i}>
               <div
                 role="img"
-                aria-label={`${label} · 姿势 ${i + 1}${muscleDescription}`}
+                aria-label={`${label} · ${spec.keyframeLabels?.[i] ?? `姿势 ${i + 1}`}${muscleDescription}`}
                 className="aspect-square"
                 dangerouslySetInnerHTML={{ __html: svg }}
               />
-              <p className="pb-1 text-center text-xs text-muted-foreground">姿势 {i + 1}</p>
+              <p className="pb-1 text-center text-xs text-muted-foreground">{spec.keyframeLabels?.[i] ?? `姿势 ${i + 1}`}</p>
             </div>
           ))}
         </div>

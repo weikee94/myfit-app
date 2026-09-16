@@ -13,6 +13,7 @@ export interface Pose {
   armFar:  [number, number];           // far side, drawn in a quieter solid shade
   legNear: [number, number, number];   // thigh, shin, foot
   legFar:  [number, number, number];
+  racketAngle?: number;                 // absolute SVG angle for a racket held in the near hand
 }
 
 export type StickProp =
@@ -34,6 +35,11 @@ export function muscleLabels(spec: StickFigureSpec): string[] {
   return [...new Set((spec.muscleTargets ?? []).map(({ region }) => MUSCLE_LABELS[region]))];
 }
 
+export interface AthleteEquipment {
+  kind: "racket";
+  hand: "near";
+}
+
 export interface StickFigureSpec {
   view:      "side" | "front";
   duration:  number;               // seconds per loop
@@ -41,6 +47,9 @@ export interface StickFigureSpec {
   weights?:  number[];             // relative duration of segment keyframes[i] → keyframes[i + 1]; equal by default
   props?:    StickProp[];
   hold?:     ("near" | "far")[];   // hands carrying a dumbbell / kettlebell
+  equipment?: AthleteEquipment;
+  viewLabel?: string;
+  keyframeLabels?: [string, string];
   // A joint that stays planted between keyframes (standing foot, toe on a step, knee on a bench).
   // In-between frames shift the whole body so this joint follows a straight path between its keyframe positions.
   anchor?:   { leg: "near" | "far"; joint: "knee" | "ankle" | "toe" };
@@ -58,6 +67,17 @@ const STEPS_PER_SEGMENT = 10;
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 const move = (p: Point, len: number, deg: number): Point => [p[0] + Math.sin(rad(deg)) * len, p[1] + Math.cos(rad(deg)) * len];
+
+export function racketGeometry(pose: Pose, joints = poseJoints(pose)) {
+  if (pose.racketAngle === undefined) return undefined;
+  const hand = joints.armNear[2];
+  return {
+    hand,
+    throat: move(hand, 12, pose.racketAngle),
+    head: move(hand, 17, pose.racketAngle),
+    angle: pose.racketAngle,
+  };
+}
 
 export function poseJoints(p: Pose): Joints {
   const neck = move(p.hip, BONE.torso, p.torso);
@@ -95,6 +115,9 @@ function blend(a: Pose, b: Pose, t: number): Pose {
     armFar: angles(a.armFar, b.armFar),
     legNear: angles(a.legNear, b.legNear),
     legFar: angles(a.legFar, b.legFar),
+    ...(a.racketAngle !== undefined && b.racketAngle !== undefined
+      ? { racketAngle: lerpAngle(a.racketAngle, b.racketAngle, e) }
+      : {}),
   };
 }
 
@@ -147,7 +170,11 @@ export function stickFigureSvg(spec: StickFigureSpec, opts: { keyframe?: number;
   // the head, rounded strokes and held weights, as well as rounding during SMIL.
   const extent = sampled.poses.flatMap((pose) => {
     const j = poseJoints(pose);
-    return [j.hip, j.neck, j.head, ...j.armNear, ...j.armFar, ...j.legNear, ...j.legFar];
+    const racket = spec.equipment?.kind === "racket" ? racketGeometry(pose, j) : undefined;
+    const racketBounds: Point[] = racket
+      ? [[racket.head[0] - 5, racket.head[1] - 5], [racket.head[0] + 5, racket.head[1] + 5]]
+      : [];
+    return [j.hip, j.neck, j.head, ...j.armNear, ...j.armFar, ...j.legNear, ...j.legFar, ...racketBounds];
   });
   for (const prop of spec.props ?? []) {
     if (prop.kind === "rect") extent.push([prop.x, prop.y], [prop.x + prop.w, prop.y + prop.h]);
@@ -262,6 +289,28 @@ export function stickFigureSvg(spec: StickFigureSpec, opts: { keyframe?: number;
       `${animate("x", hands.map((h) => fmt(h[0] - 3)))}${animate("y", hands.map((h) => fmt(h[1])))}</rect>`;
   };
 
+  const rackets = poses.map((pose, index) => racketGeometry(pose, frames[index]));
+  const racket = spec.equipment?.kind === "racket" && rackets.every(Boolean) ? (() => {
+    const gear = rackets as NonNullable<ReturnType<typeof racketGeometry>>[];
+    const racketHead = (r: (typeof gear)[number]) => {
+      const axis = rad(r.angle);
+      const ux = Math.sin(axis), uy = Math.cos(axis);
+      const vx = Math.cos(axis), vy = -Math.sin(axis);
+      const outline: Point[] = Array.from({ length: 9 }, (_, i) => {
+        const theta = (i % 8) * Math.PI / 4;
+        return [r.head[0] + ux * Math.cos(theta) * 5 + vx * Math.sin(theta) * 3.5,
+          r.head[1] + uy * Math.cos(theta) * 5 + vy * Math.sin(theta) * 3.5];
+      });
+      return points(outline);
+    };
+    const headOutlines = gear.map(racketHead);
+    return `<g data-equipment="racket" fill="none" stroke="${neutral}" stroke-linecap="round" stroke-linejoin="round">` +
+      `<line stroke-width="1.4" x1="${fmt(gear[0].hand[0])}" y1="${fmt(gear[0].hand[1])}" x2="${fmt(gear[0].throat[0])}" y2="${fmt(gear[0].throat[1])}">` +
+      `${animate("x1", gear.map((r) => fmt(r.hand[0])))}${animate("y1", gear.map((r) => fmt(r.hand[1])))}` +
+      `${animate("x2", gear.map((r) => fmt(r.throat[0])))}${animate("y2", gear.map((r) => fmt(r.throat[1])))}</line>` +
+      `<polyline stroke-width="1" points="${headOutlines[0]}">${animate("points", headOutlines)}</polyline></g>`;
+  })() : "";
+
   const props = (spec.props ?? []).map((p) =>
     p.kind === "floor"
       ? `<line x1="${fmt(cameraX + 5)}" x2="${fmt(cameraX + size - 5)}" y1="${p.y}" y2="${p.y}" stroke="${neutral}" stroke-opacity="0.3" stroke-width="1"/>`
@@ -278,7 +327,7 @@ export function stickFigureSvg(spec: StickFigureSpec, opts: { keyframe?: number;
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${fmt(cameraX)} ${fmt(cameraY)} ${fmt(size)} ${fmt(size)}" width="100%" height="100%" aria-hidden="true" focusable="false">` +
     definitions + shadow + props +
     sculptLeg("far", far) + muscles("leg", "far") +
-    sculptArm("far", far) + muscles("arm", "far") + weight("far") +
+    sculptArm("far", far) + muscles("arm", "far") + weight("far") + racket +
     limb((j) => [j.neck, j.head], "hsl(var(--athlete-body))", 3.8) +
     filled((j) => contour(j.neck, j.hip, 3.6, 4.8, 2.7)) + pelvis + muscles("torso", "near") +
     sculptLeg("near", near) + muscles("leg", "near") +

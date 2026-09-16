@@ -320,6 +320,31 @@ const copenhagenShortLever: StickFigureSpec = (() => {
   };
 })();
 
+// ── Badminton technique ──────────────────────────────────────────────────────
+
+// Right-handed forehand overhead: athletic ready position into an early overhead preparation.
+// The duplicate endpoints create readable holds without splitting the motion across two athletes.
+const badmintonForehandOverheadReady: StickFigureSpec = (() => {
+  const ready: Pose = {
+    hip: [50, 62], pelvis: 90, torso: 180, head: 180,
+    armNear: [55, 120], armFar: [-45, -110],
+    legNear: [27, -20, 90], legFar: [-27, 20, -90],
+    racketAngle: 145,
+  };
+  const set: Pose = {
+    hip: [51, 60], pelvis: 76, torso: 170, head: 174,
+    armNear: [145, 205], armFar: [-145, -145],
+    legNear: [12, -12, 75], legFar: [-38, 5, -75],
+    racketAngle: 215,
+  };
+  return {
+    view: "front", viewLabel: "正面略侧", duration: 4,
+    keyframes: [ready, set, set, ready], weights: [1.2, 0.45, 1.2, 0.45],
+    keyframeLabels: ["准备", "架拍"], equipment: { kind: "racket", hand: "near" },
+    props: [FLOOR_90],
+  };
+})();
+
 // ── Plank walk-outs ──────────────────────────────────────────────────────────
 
 const WALK_STAND: Pose = { hip: [22, 57], torso: 180, head: 180, armNear: [5, 5], armFar: [-5, -3], legNear: [0, 0, 90], legFar: [0, 0, 90] };
@@ -345,6 +370,8 @@ const pressUpSingleArmExtension: StickFigureSpec = { muscleTargets: [{ region: "
 };
 
 export const STICK_FIGURES: Record<string, StickFigureSpec> = {
+  // badminton technique
+  "badminton forehand overhead ready":            badmintonForehandOverheadReady,
   // calves, feet, shins
   "floating heel drop":                           floatingHeelDrop,
   "double leg calf raise on step":                doubleLegCalfRaiseOnStep,

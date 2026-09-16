@@ -2,6 +2,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BadmintonPracticePlan from "@/components/plan/BadmintonPracticePlan";
 import HansonsPaceChart from "@/components/plan/HansonsPaceChart";
 import RunnaMainPlan from "@/components/plan/RunnaMainPlan";
 import { cn } from "@/lib/utils";
@@ -146,7 +147,7 @@ function RulesReference() {
 export default function PlanPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedTab = searchParams.get("tab");
-  const tab = requestedTab && ["weeks", "runs", "rules", "paces"].includes(requestedTab) ? requestedTab : "weeks";
+  const tab = requestedTab && ["weeks", "runs", "badminton", "rules", "paces"].includes(requestedTab) ? requestedTab : "weeks";
   return (
     <div className="flex flex-col gap-4">
       <Tabs value={tab} onValueChange={(value) => {
@@ -155,10 +156,11 @@ export default function PlanPage() {
         setSearchParams(next, { replace: true, preventScrollReset: true });
       }}>
         <TabsList className="w-full">
-          <TabsTrigger value="weeks" className="flex-1">Strength</TabsTrigger>
-          <TabsTrigger value="runs" className="flex-1">Runs</TabsTrigger>
-          <TabsTrigger value="rules" className="flex-1">Rules</TabsTrigger>
-          <TabsTrigger value="paces" className="flex-1">Paces</TabsTrigger>
+          <TabsTrigger value="weeks" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Strength</TabsTrigger>
+          <TabsTrigger value="runs" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Runs</TabsTrigger>
+          <TabsTrigger value="badminton" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">羽球</TabsTrigger>
+          <TabsTrigger value="rules" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Rules</TabsTrigger>
+          <TabsTrigger value="paces" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Paces</TabsTrigger>
         </TabsList>
         <TabsContent value="weeks" className="mt-4 flex flex-col gap-4">
           {/* The Runna heading belongs to the strength plan only, not Runs / Rules / Paces */}
@@ -169,6 +171,7 @@ export default function PlanPage() {
           <WeekList />
         </TabsContent>
         <TabsContent value="runs" className="mt-4"><RunnaMainPlan /></TabsContent>
+        <TabsContent value="badminton" className="mt-4"><BadmintonPracticePlan /></TabsContent>
         <TabsContent value="rules" className="mt-4"><RulesReference /></TabsContent>
         <TabsContent value="paces" className="mt-4"><HansonsPaceChart /></TabsContent>
       </Tabs>
