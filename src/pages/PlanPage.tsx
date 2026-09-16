@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -144,9 +144,16 @@ function RulesReference() {
 }
 
 export default function PlanPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+  const tab = requestedTab && ["weeks", "runs", "rules", "paces"].includes(requestedTab) ? requestedTab : "weeks";
   return (
     <div className="flex flex-col gap-4">
-      <Tabs defaultValue="weeks">
+      <Tabs value={tab} onValueChange={(value) => {
+        const next = new URLSearchParams(searchParams);
+        next.set("tab", value);
+        setSearchParams(next, { replace: true, preventScrollReset: true });
+      }}>
         <TabsList className="w-full">
           <TabsTrigger value="weeks" className="flex-1">Strength</TabsTrigger>
           <TabsTrigger value="runs" className="flex-1">Runs</TabsTrigger>

@@ -32,6 +32,7 @@ interface WorkoutSessionState {
   addExercise: (exercise: { id: string; name: string; demo_url?: string | null; demo_type?: "youtube" | "gif" | "image" | null }) => void;
   removeExercise: (exerciseId: string) => void;
   addSet: (exerciseId: string) => void;
+  removeSet: (exerciseId: string, setNumber: number) => void;
   updateSet: (exerciseId: string, setNumber: number, data: Partial<ActiveSet>) => void;
   completeSet: (exerciseId: string, setNumber: number) => void;
   clearSession: () => void;
@@ -74,6 +75,16 @@ export const useWorkoutSession = create<WorkoutSessionState>()(
           exercises: get().exercises.map((e) =>
             e.exercise_id === exerciseId
               ? { ...e, sets: [...e.sets, { set_number: e.sets.length + 1, completed: false }] }
+              : e
+          ),
+        }),
+
+      removeSet: (exerciseId, setNumber) =>
+        set({
+          exercises: get().exercises.map((e) =>
+            e.exercise_id === exerciseId
+              ? { ...e, sets: e.sets.filter((s) => s.set_number !== setNumber)
+                  .map((s, index) => ({ ...s, set_number: index + 1 })) }
               : e
           ),
         }),
