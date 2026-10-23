@@ -53,7 +53,7 @@ export default function ExerciseDetailPage() {
         <Card>
           <CardContent className="p-4">
             <p className="mb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wide">How to Perform</p>
-            <p className="text-sm leading-relaxed">{exercise.instructions}</p>
+            <p className="text-sm leading-relaxed whitespace-pre-line">{exercise.instructions}</p>
           </CardContent>
         </Card>
       )}
