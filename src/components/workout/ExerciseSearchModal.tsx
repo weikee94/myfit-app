@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import ExerciseFilterBar from "@/components/exercise/ExerciseFilterBar";
 import ExerciseCard from "@/components/exercise/ExerciseCard";
 import { useExercises } from "@/hooks/useExercises";
 import type { Exercise, ExerciseCategory } from "@/types/exercise";
+
+const PAGE_SIZE = 50;
 
 interface Props {
   open:     boolean;
@@ -14,10 +17,12 @@ interface Props {
 export default function ExerciseSearchModal({ open, onClose, onSelect }: Props) {
   const [category, setCategory] = useState<ExerciseCategory | "all">("all");
   const [search, setSearch]     = useState("");
+  const [limit, setLimit]       = useState(PAGE_SIZE);
   const { data: exercises = [], isLoading } = useExercises(category === "all" ? undefined : category);
 
   const filtered = exercises.filter((e) =>
-    e.name.toLowerCase().includes(search.toLowerCase())
+    e.name.toLowerCase().includes(search.toLowerCase()) ||
+    e.muscle_groups.some((m) => m.toLowerCase().includes(search.toLowerCase()))
   );
 
   return (
@@ -26,7 +31,12 @@ export default function ExerciseSearchModal({ open, onClose, onSelect }: Props) 
         <DialogHeader>
           <DialogTitle>Add Exercise</DialogTitle>
         </DialogHeader>
-        <ExerciseFilterBar category={category} onCategory={setCategory} search={search} onSearch={setSearch} />
+        <ExerciseFilterBar
+          category={category}
+          onCategory={(c) => { setCategory(c); setLimit(PAGE_SIZE); }}
+          search={search}
+          onSearch={(q) => { setSearch(q); setLimit(PAGE_SIZE); }}
+        />
         <div className="flex-1 overflow-y-auto">
           {isLoading ? (
             <p className="py-8 text-center text-sm text-muted-foreground">Loading…</p>
@@ -34,7 +44,7 @@ export default function ExerciseSearchModal({ open, onClose, onSelect }: Props) 
             <p className="py-8 text-center text-sm text-muted-foreground">No exercises found.</p>
           ) : (
             <div className="flex flex-col gap-2">
-              {filtered.map((ex) => (
+              {filtered.slice(0, limit).map((ex) => (
                 <ExerciseCard
                   key={ex.id}
                   exercise={ex}
@@ -42,6 +52,11 @@ export default function ExerciseSearchModal({ open, onClose, onSelect }: Props) 
                   onClick={() => { onSelect(ex); onClose(); }}
                 />
               ))}
+              {filtered.length > limit && (
+                <Button variant="outline" onClick={() => setLimit((l) => l + PAGE_SIZE)}>
+                  Show more ({filtered.length - limit} left)
+                </Button>
+              )}
             </div>
           )}
         </div>
