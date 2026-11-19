@@ -13,6 +13,24 @@ export async function fetchWorkouts(limit = 50): Promise<WorkoutRow[]> {
   return data as WorkoutRow[];
 }
 
+// Every completed workout, for all-time stats. Paged past Supabase's 1000-row response cap.
+export async function fetchAllCompletedWorkouts(): Promise<WorkoutRow[]> {
+  const PAGE = 1000;
+  const rows: WorkoutRow[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from("workouts")
+      .select("*")
+      .eq("completed", true)
+      .order("date", { ascending: false })
+      .order("id")
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    rows.push(...(data as WorkoutRow[]));
+    if (data.length < PAGE) return rows;
+  }
+}
+
 export async function fetchWorkoutById(id: string): Promise<WorkoutWithExercises> {
   const { data, error } = await supabase
     .from("workouts")

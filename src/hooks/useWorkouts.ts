@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchWorkouts, fetchWorkoutById, createWorkout, deleteWorkout,
-         finalizeStrengthWorkout, fetchWeekWorkouts } from "@/api/workouts";
+         finalizeStrengthWorkout, fetchWeekWorkouts, fetchAllCompletedWorkouts } from "@/api/workouts";
 import type { WorkoutInsert } from "@/types/database";
 import type { ActiveExercise } from "@/store/workoutSessionStore";
 
@@ -10,6 +10,10 @@ export function useWorkouts() {
 
 export function useWorkout(id: string) {
   return useQuery({ queryKey: ["workouts", id], queryFn: () => fetchWorkoutById(id), enabled: !!id });
+}
+
+export function useAllCompletedWorkouts() {
+  return useQuery({ queryKey: ["workouts", "all-completed"], queryFn: fetchAllCompletedWorkouts });
 }
 
 export function useWeekWorkouts() {
