@@ -8,14 +8,17 @@ const TITLES: Record<string, string> = {
   "/workouts":  "Workout Log",
   "/workouts/new": "New Workout",
   "/exercises": "Exercise Library",
-  "/plan":      "Training Plan",
+  "/plan":      "Your Plan",
+  "/plan/overview": "Plan Overview",
+  "/plan/manage":   "Manage Plan",
+  "/plan/notes":    "Plan Notes",
   "/progress":  "Progress",
   "/profile":   "Profile",
 };
 
 export default function Topbar() {
   const { pathname } = useLocation();
-  const title = TITLES[pathname] ?? "MyFit";
+  const title = TITLES[pathname] ?? (pathname.startsWith("/plan/week/") ? "Plan Overview" : "MyFit");
 
   return (
     <header className="sticky top-0 z-30 border-b bg-background/95 pt-[env(safe-area-inset-top)] backdrop-blur supports-[backdrop-filter]:bg-background/60">

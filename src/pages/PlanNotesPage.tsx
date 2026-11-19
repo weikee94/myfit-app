@@ -1,0 +1,180 @@
+import { Link, useSearchParams } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BadmintonPracticePlan from "@/components/plan/BadmintonPracticePlan";
+import HansonsPaceChart from "@/components/plan/HansonsPaceChart";
+import RunnaMainPlan from "@/components/plan/RunnaMainPlan";
+import { cn } from "@/lib/utils";
+import { RUNNA_MARATHON_PLAN as plan } from "@/data/plans/runnaMarathon";
+
+const SECTION_LABEL = "mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground";
+
+function WeekList() {
+  const weekNumbers = Array.from({ length: plan.totalWeeks }, (_, i) => i + 1);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <Link to="/plan/ben">
+        <Card className="transition-colors hover:bg-accent active:bg-accent">
+          <CardContent className="flex items-center gap-3 p-4">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium">Ben 专属 · 两套跟练课</p>
+              <p className="text-sm text-muted-foreground">力量循环 · 硬课 ／ 核心跟练 · 低疲劳</p>
+            </div>
+            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+          </CardContent>
+        </Card>
+      </Link>
+      <p className="text-sm text-muted-foreground">{plan.scheduleNote}</p>
+      {weekNumbers.map((n) => {
+        const week = plan.weeks.find((w) => w.week === n);
+
+        if (!week) {
+          return (
+            <div key={n} className="flex items-center gap-3 rounded-xl border border-dashed px-4 py-3 text-muted-foreground">
+              <span className="w-8 text-sm font-semibold">W{n}</span>
+              <span className="text-sm">待补充 · {plan.placeholderNote}</span>
+            </div>
+          );
+        }
+
+        return (
+          <Link key={n} to={`/plan/${n}`}>
+            <Card className="transition-colors hover:bg-accent active:bg-accent">
+              <CardContent className="flex items-center gap-3 p-4">
+                <span className="w-8 text-sm font-semibold">W{n}</span>
+                <div className="min-w-0 flex-1">
+                  <p className="line-clamp-2 text-sm font-medium">{week.sessions.map((s) => s.title).join(" · ")}</p>
+                  <p className="text-sm text-muted-foreground">{week.subtitle} · <span className="text-strength">{week.focus}</span></p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+              </CardContent>
+            </Card>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+function RulesReference() {
+  return (
+    <div className="flex flex-col gap-4">
+      <Card>
+        <CardContent className="p-4">
+          <p className={SECTION_LABEL}>判断标准</p>
+          <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm">
+            {plan.criteria.map((c) => (
+              <li key={c.title}>
+                <span className="font-medium">{c.title}</span>
+                {c.text && <span className="text-muted-foreground"> —— {c.text}</span>}
+              </li>
+            ))}
+          </ol>
+          <p className="mt-3 text-sm text-muted-foreground">{plan.principle}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <p className={SECTION_LABEL}>统一替换规则</p>
+          <p className="mb-3 whitespace-pre-line text-sm text-muted-foreground">{plan.rulesNote}</p>
+          <div className="divide-y rounded-lg border">
+            {plan.rules.map((r) => (
+              <div key={r.from} className="flex flex-col gap-0.5 px-3 py-2 text-sm">
+                <p>
+                  <span className="font-medium">{r.from}</span>
+                  <span className="text-muted-foreground"> · {r.count}</span>
+                </p>
+                <p className="font-medium text-strength">→ {r.to}</p>
+                <p className="text-sm text-muted-foreground">{r.why}</p>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="flex flex-col gap-3 p-4">
+          <p className={cn(SECTION_LABEL, "mb-0")}>两条系统性缺口</p>
+          {plan.gaps.map((g) => (
+            <div key={g.title}>
+              <p className="text-sm font-medium">{g.title}</p>
+              <p className="whitespace-pre-line text-sm text-muted-foreground">{g.text}</p>
+            </div>
+          ))}
+          <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-lg border px-3 py-2 text-sm">
+            {plan.pushPull.map((p) => (
+              <div key={p.session} className={cn("contents", p.best && "font-semibold text-run")}>
+                <span>{p.session}</span>
+                <span className="text-right tabular-nums">{p.ratio}{p.best && " ← 最平衡"}</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-sm">{plan.pushPullRule}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <p className={SECTION_LABEL}>Runna 做得好的地方（一个都不要动）</p>
+          <div className="flex flex-col gap-2">
+            {plan.strengths.map((s) => (
+              <div key={s.area} className="text-sm">
+                <p className="font-medium">{s.area}</p>
+                <p className="text-muted-foreground">{s.exercises}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-sm">{plan.strengthsNote}</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="p-4">
+          <p className={SECTION_LABEL}>趋势观察</p>
+          <p className="whitespace-pre-line text-sm text-muted-foreground">{plan.trend.text}</p>
+          <ol className="mt-2 list-decimal pl-5 text-sm">
+            {plan.trend.items.map((item) => <li key={item}>{item}</li>)}
+          </ol>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function PlanNotesPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedTab = searchParams.get("tab");
+  const tab = requestedTab && ["weeks", "runs", "badminton", "rules", "paces"].includes(requestedTab) ? requestedTab : "weeks";
+  return (
+    <div className="flex flex-col gap-4">
+      <Tabs value={tab} onValueChange={(value) => {
+        const next = new URLSearchParams(searchParams);
+        next.set("tab", value);
+        setSearchParams(next, { replace: true, preventScrollReset: true });
+      }}>
+        <TabsList className="w-full">
+          <TabsTrigger value="weeks" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Strength</TabsTrigger>
+          <TabsTrigger value="runs" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Runs</TabsTrigger>
+          <TabsTrigger value="badminton" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">羽球</TabsTrigger>
+          <TabsTrigger value="rules" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Rules</TabsTrigger>
+          <TabsTrigger value="paces" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Paces</TabsTrigger>
+        </TabsList>
+        <TabsContent value="weeks" className="mt-4 flex flex-col gap-4">
+          {/* The Runna heading belongs to the strength plan only, not Runs / Rules / Paces */}
+          <div>
+            <h2 className="text-xl font-bold">{plan.name}</h2>
+            <p className="text-sm text-muted-foreground">{plan.summary}</p>
+          </div>
+          <WeekList />
+        </TabsContent>
+        <TabsContent value="runs" className="mt-4"><RunnaMainPlan /></TabsContent>
+        <TabsContent value="badminton" className="mt-4"><BadmintonPracticePlan /></TabsContent>
+        <TabsContent value="rules" className="mt-4"><RulesReference /></TabsContent>
+        <TabsContent value="paces" className="mt-4"><HansonsPaceChart /></TabsContent>
+      </Tabs>
+    </div>
+  );
+}
