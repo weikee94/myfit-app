@@ -13,6 +13,10 @@ import ProgressPage from "@/pages/ProgressPage";
 import ProfilePage from "@/pages/ProfilePage";
 import PlanPage from "@/pages/PlanPage";
 import PlanWeekPage from "@/pages/PlanWeekPage";
+import PlanNotesPage from "@/pages/PlanNotesPage";
+import PlanWeekDetailPage from "@/pages/PlanWeekDetailPage";
+import PlanOverviewPage from "@/pages/PlanOverviewPage";
+import PlanManagePage from "@/pages/PlanManagePage";
 import BenWorkoutsPage from "@/pages/BenWorkoutsPage";
 import HansonsSchedulePage from "@/pages/HansonsSchedulePage";
 
@@ -31,6 +35,10 @@ export const router = createBrowserRouter([
       { path: "/exercises/:id",    element: <ExerciseDetailPage /> },
       { path: "/progress",         element: <ProgressPage /> },
       { path: "/plan",             element: <PlanPage /> },
+      { path: "/plan/notes",       element: <PlanNotesPage /> },
+      { path: "/plan/overview",    element: <PlanOverviewPage /> },
+      { path: "/plan/manage",      element: <PlanManagePage /> },
+      { path: "/plan/week/:week",  element: <PlanWeekDetailPage /> },
       { path: "/plan/ben",         element: <BenWorkoutsPage /> },
       { path: "/plan/hansons",     element: <HansonsSchedulePage /> },
       { path: "/plan/:week",       element: <PlanWeekPage /> },

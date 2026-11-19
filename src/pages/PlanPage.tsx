@@ -1,180 +1,87 @@
-import { Link, useSearchParams } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import BadmintonPracticePlan from "@/components/plan/BadmintonPracticePlan";
-import HansonsPaceChart from "@/components/plan/HansonsPaceChart";
-import RunnaMainPlan from "@/components/plan/RunnaMainPlan";
-import { cn } from "@/lib/utils";
-import { RUNNA_MARATHON_PLAN as plan } from "@/data/plans/runnaMarathon";
+import { useEffect, useMemo, useRef } from "react";
+import { Link } from "react-router-dom";
+import { format, parseISO } from "date-fns";
+import { ChevronRight, ClipboardList, Dumbbell, Flag, LayoutList, NotebookPen, type LucideIcon } from "lucide-react";
+import MedalBadge from "@/components/progress/MedalBadge";
+import SegmentBar from "@/components/runna-plan/SegmentBar";
+import RaceEstimate from "@/components/runna-plan/RaceEstimate";
+import WeekCard from "@/components/runna-plan/WeekCard";
+import { useAllCompletedWorkouts } from "@/hooks/useWorkouts";
+import { RUNNA_PLAN_META as meta } from "@/data/plans/runnaMain";
+import { TOTAL_WEEKS, buildPlanWeeks, currentWeekNumber } from "@/lib/runnaPlan";
 
-const SECTION_LABEL = "mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground";
-
-function WeekList() {
-  const weekNumbers = Array.from({ length: plan.totalWeeks }, (_, i) => i + 1);
-
-  return (
-    <div className="flex flex-col gap-2">
-      <Link to="/plan/ben">
-        <Card className="transition-colors hover:bg-accent active:bg-accent">
-          <CardContent className="flex items-center gap-3 p-4">
-            <div className="min-w-0 flex-1">
-              <p className="text-sm font-medium">Ben 专属 · 两套跟练课</p>
-              <p className="text-sm text-muted-foreground">力量循环 · 硬课 ／ 核心跟练 · 低疲劳</p>
-            </div>
-            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-          </CardContent>
-        </Card>
-      </Link>
-      <p className="text-sm text-muted-foreground">{plan.scheduleNote}</p>
-      {weekNumbers.map((n) => {
-        const week = plan.weeks.find((w) => w.week === n);
-
-        if (!week) {
-          return (
-            <div key={n} className="flex items-center gap-3 rounded-xl border border-dashed px-4 py-3 text-muted-foreground">
-              <span className="w-8 text-sm font-semibold">W{n}</span>
-              <span className="text-sm">待补充 · {plan.placeholderNote}</span>
-            </div>
-          );
-        }
-
-        return (
-          <Link key={n} to={`/plan/${n}`}>
-            <Card className="transition-colors hover:bg-accent active:bg-accent">
-              <CardContent className="flex items-center gap-3 p-4">
-                <span className="w-8 text-sm font-semibold">W{n}</span>
-                <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 text-sm font-medium">{week.sessions.map((s) => s.title).join(" · ")}</p>
-                  <p className="text-sm text-muted-foreground">{week.subtitle} · <span className="text-strength">{week.focus}</span></p>
-                </div>
-                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
-              </CardContent>
-            </Card>
-          </Link>
-        );
-      })}
-    </div>
-  );
-}
-
-function RulesReference() {
-  return (
-    <div className="flex flex-col gap-4">
-      <Card>
-        <CardContent className="p-4">
-          <p className={SECTION_LABEL}>判断标准</p>
-          <ol className="flex list-decimal flex-col gap-1 pl-5 text-sm">
-            {plan.criteria.map((c) => (
-              <li key={c.title}>
-                <span className="font-medium">{c.title}</span>
-                {c.text && <span className="text-muted-foreground"> —— {c.text}</span>}
-              </li>
-            ))}
-          </ol>
-          <p className="mt-3 text-sm text-muted-foreground">{plan.principle}</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-4">
-          <p className={SECTION_LABEL}>统一替换规则</p>
-          <p className="mb-3 whitespace-pre-line text-sm text-muted-foreground">{plan.rulesNote}</p>
-          <div className="divide-y rounded-lg border">
-            {plan.rules.map((r) => (
-              <div key={r.from} className="flex flex-col gap-0.5 px-3 py-2 text-sm">
-                <p>
-                  <span className="font-medium">{r.from}</span>
-                  <span className="text-muted-foreground"> · {r.count}</span>
-                </p>
-                <p className="font-medium text-strength">→ {r.to}</p>
-                <p className="text-sm text-muted-foreground">{r.why}</p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="flex flex-col gap-3 p-4">
-          <p className={cn(SECTION_LABEL, "mb-0")}>两条系统性缺口</p>
-          {plan.gaps.map((g) => (
-            <div key={g.title}>
-              <p className="text-sm font-medium">{g.title}</p>
-              <p className="whitespace-pre-line text-sm text-muted-foreground">{g.text}</p>
-            </div>
-          ))}
-          <div className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 rounded-lg border px-3 py-2 text-sm">
-            {plan.pushPull.map((p) => (
-              <div key={p.session} className={cn("contents", p.best && "font-semibold text-run")}>
-                <span>{p.session}</span>
-                <span className="text-right tabular-nums">{p.ratio}{p.best && " ← 最平衡"}</span>
-              </div>
-            ))}
-          </div>
-          <p className="text-sm">{plan.pushPullRule}</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-4">
-          <p className={SECTION_LABEL}>Runna 做得好的地方（一个都不要动）</p>
-          <div className="flex flex-col gap-2">
-            {plan.strengths.map((s) => (
-              <div key={s.area} className="text-sm">
-                <p className="font-medium">{s.area}</p>
-                <p className="text-muted-foreground">{s.exercises}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-3 text-sm">{plan.strengthsNote}</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-4">
-          <p className={SECTION_LABEL}>趋势观察</p>
-          <p className="whitespace-pre-line text-sm text-muted-foreground">{plan.trend.text}</p>
-          <ol className="mt-2 list-decimal pl-5 text-sm">
-            {plan.trend.items.map((item) => <li key={item}>{item}</li>)}
-          </ol>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+const ACTIONS: { to: string; icon: LucideIcon; label: string }[] = [
+  { to: "/plan/overview",          icon: LayoutList,    label: "Plan Overview" },
+  { to: "/plan/notes?tab=weeks",   icon: Dumbbell,      label: "Strength Plan" },
+  { to: "/plan/notes?tab=runs",    icon: NotebookPen,   label: "Plan Notes"    },
+  { to: "/plan/manage",            icon: ClipboardList, label: "Manage Plan"   },
+];
 
 export default function PlanPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const requestedTab = searchParams.get("tab");
-  const tab = requestedTab && ["weeks", "runs", "badminton", "rules", "paces"].includes(requestedTab) ? requestedTab : "weeks";
+  const { data: workouts = [] } = useAllCompletedWorkouts();
+  const weeks   = useMemo(() => buildPlanWeeks(workouts), [workouts]);
+  const current = currentWeekNumber();
+  const currentRef = useRef<HTMLDivElement>(null);
+
+  // Open on the current week, like Runna; the plan summary is one scroll up.
+  useEffect(() => {
+    if (current > 1) currentRef.current?.scrollIntoView({ block: "start" });
+  }, [current]);
+
+  const weeksDone = weeks.filter((w) => w.week < current).length;
+  const doneKm    = weeks.reduce((t, w) => t + w.doneKm, 0);
+  const plannedKm = weeks.reduce((t, w) => t + w.plannedKm, 0);
+  const raceDate  = parseISO(meta.raceDate);
+
   return (
     <div className="flex flex-col gap-4">
-      <Tabs value={tab} onValueChange={(value) => {
-        const next = new URLSearchParams(searchParams);
-        next.set("tab", value);
-        setSearchParams(next, { replace: true, preventScrollReset: true });
-      }}>
-        <TabsList className="w-full">
-          <TabsTrigger value="weeks" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Strength</TabsTrigger>
-          <TabsTrigger value="runs" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Runs</TabsTrigger>
-          <TabsTrigger value="badminton" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">羽球</TabsTrigger>
-          <TabsTrigger value="rules" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Rules</TabsTrigger>
-          <TabsTrigger value="paces" className="min-w-0 flex-1 px-1 text-xs sm:px-3 sm:text-sm">Paces</TabsTrigger>
-        </TabsList>
-        <TabsContent value="weeks" className="mt-4 flex flex-col gap-4">
-          {/* The Runna heading belongs to the strength plan only, not Runs / Rules / Paces */}
+      <section className="flex flex-col gap-5 rounded-3xl border bg-card p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold">{plan.name}</h2>
-            <p className="text-sm text-muted-foreground">{plan.summary}</p>
+            <h2 className="text-2xl font-bold">{meta.name}</h2>
+            <p className="text-muted-foreground">Your race: <span className="font-bold text-foreground">{format(raceDate, "MMM d, yyyy").toUpperCase()}</span></p>
           </div>
-          <WeekList />
-        </TabsContent>
-        <TabsContent value="runs" className="mt-4"><RunnaMainPlan /></TabsContent>
-        <TabsContent value="badminton" className="mt-4"><BadmintonPracticePlan /></TabsContent>
-        <TabsContent value="rules" className="mt-4"><RulesReference /></TabsContent>
-        <TabsContent value="paces" className="mt-4"><HansonsPaceChart /></TabsContent>
-      </Tabs>
+          <MedalBadge shape="shield" tone="race" size={64}><span className="text-base">42.2</span></MedalBadge>
+        </div>
+        <SegmentBar total={TOTAL_WEEKS} filled={weeksDone} tone="foreground" className="gap-1" />
+        <div className="flex items-end justify-between gap-2">
+          <div>
+            <p className="text-sm text-muted-foreground">Weeks Completed</p>
+            <p className="text-3xl font-bold tabular-nums">{weeksDone}/{TOTAL_WEEKS}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-muted-foreground">Distance</p>
+            <p className="text-3xl font-bold tabular-nums">{doneKm.toFixed(1)}/{plannedKm.toFixed(1)} km</p>
+          </div>
+        </div>
+        <Link to="/plan/manage" className="flex items-center gap-2 border-t border-dashed pt-4">
+          <Flag className="h-5 w-5" />
+          <span className="font-medium">{meta.raceName}</span>
+          <span className="flex-1 font-semibold text-muted-foreground">{format(raceDate, "MMM d, yyyy")}</span>
+          <ChevronRight className="h-5 w-5 text-muted-foreground" />
+        </Link>
+      </section>
+
+      <section className="grid grid-cols-4 gap-2 rounded-3xl border bg-card px-2 py-5 shadow-sm">
+        {ACTIONS.map(({ to, icon: Icon, label }) => (
+          <Link key={to} to={to} className="flex flex-col items-center gap-2 rounded-xl text-center text-sm hover:opacity-80">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-muted-foreground/60">
+              <Icon className="h-6 w-6" />
+            </span>
+            {label}
+          </Link>
+        ))}
+      </section>
+
+      <section className="rounded-3xl border bg-card p-5 shadow-sm">
+        <RaceEstimate title="Estimated Race Times" />
+      </section>
+
+      <div className="my-2 border-t" />
+
+      {weeks.map((w) => (
+        <WeekCard key={w.week} week={w} current={w.week === current} ref={w.week === current ? currentRef : undefined} />
+      ))}
     </div>
   );
 }

@@ -37,7 +37,7 @@ export const RUNNA_WEEKDAY_LABELS: Record<RunnaDayKey, string> = {
 };
 export const RUNNA_MARK_LABELS: Record<RunnaMark, string> = { gate: "★ 判定关卡", fuel: "🍫 补给演练", hill: "⛰ 需要坡" };
 
-const PLAN_START  = "2026-08-10";   // W1 Monday
+const PLAN_START  = "2026-08-10";   // W1 Monday (the plan's first workout was Thu 8/13)
 const TOTAL_WEEKS = 17;
 
 const E = (day: RunnaDayKey, km: number, strength?: string): RunnaDay => ({ day, run: { name: "E", km, kind: "easy" }, strength });
@@ -60,6 +60,42 @@ const RACE_WEEK = [
 ];
 
 const ESCAPE_VALVE = "逃生阀：如果 11/6 那堂跑得很吃力，直接把 11/13 砍到 26km 或按 3 小时封顶。连着两周硬扛超长课，是这轮最容易受伤的地方，而伤了就什么目标都没有了。";
+
+// Shown on the Runna-style plan pages (Your Plan / Manage Plan). Values copied from the Runna app.
+export const RUNNA_PLAN_META = {
+  name:      "BYD Marathon Plan",
+  raceName:  "BYD Marathon",
+  raceDate:  "2026-12-06",
+  raceKm:    42.195,
+  firstDay:  "2026-08-13",
+  preferences: [
+    { label: "Training Volume",        value: "Progressive" },
+    { label: "Difficulty",             value: "Custom" },
+    { label: "Current Weekly Mileage", value: "63km" },
+    { label: "Current Longest Run",    value: "33km" },
+    { label: "Elevation Profile",      value: "Rolling" },
+  ],
+  schedule: [
+    { label: "Runs Per Week", value: "5" },
+    { label: "Available",     value: "Mon, Tue, Thu, Fri, Sat" },
+    { label: "Long Run Day",  value: "Sat" },
+  ],
+  // Race times entered in Runna; the race-time estimate is derived from these.
+  raceTimes: [
+    { label: "5k/10k time",             badge: "10K",  km: 10,      time: "48:50" },
+    { label: "Half/full marathon time", badge: "21.1", km: 21.0975, time: "1:50:04" },
+  ],
+  recovery: "Post-Race Recovery Plan starts automatically after race day.",
+};
+
+// W1–W4 were logged before the day-by-day schedule was transcribed, so only their totals are known.
+// W1's two sessions are known from the Runna app.
+export const RUNNA_EARLY_WEEKS: { week: number; sessions: number; km: number; days?: RunnaDay[] }[] = [
+  { week: 1, sessions: 2, km: 8, days: [{ day: "thu", run: { name: "Progressive Long Run", km: 8, kind: "long" }, strength: "Stronger Upper Body" }] },
+  { week: 2, sessions: 6, km: 19 },
+  { week: 3, sessions: 6, km: 23 },
+  { week: 4, sessions: 6, km: 17 },
+];
 
 export const RUNNA_MAIN = {
   title: "Runna 主线 · 12/6 全马",
@@ -230,14 +266,15 @@ export const RUNNA_MAIN = {
       ],
     },
     {
-      week: 15, start: "2026-11-16", km: 49, longRun: "24km", quality: "Tempo 3km",
+      // Re-transcribed from the Runna app on 2026-11-19 (runs Mon/Tue/Thu/Fri/Sat, long run moved to Sat).
+      week: 15, start: "2026-11-16", km: 50.5, longRun: "22km", quality: "Tempo 6.5km",
       days: [
-        E("mon", 7.5, "Lower Body Supersets"),
-        Q("tue", "Tempo 3km", 6, "Upper Body Endurance"),
-        E("thu", 5, "Full Body Endurance"),
-        { ...L("fri", "Block Long Run", 24), marks: ["gate", "fuel"], gate: "review",
-          change: { from: "24km 全 easy", to: "22km = 14E + 8MP", duration: "2:22", purpose: "★ 疲劳下的复核" } },
-        E("sat", 6.5),
+        E("mon", 8, "Full Body"),
+        Q("tue", "Tempo", 6.5, "Upper Body"),
+        E("thu", 9, "Legs & Core"),
+        E("fri", 5),
+        { ...L("sat", "Long Run", 22), marks: ["gate", "fuel"], gate: "review",
+          change: { from: "22km 全 easy", to: "22km = 14E + 8MP", duration: "2:22", purpose: "★ 疲劳下的复核" } },
       ],
     },
     {
@@ -275,7 +312,7 @@ export const RUNNA_MAIN = {
 
   gates: {
     title: "★ 叠加层一 · 判定关卡",
-    intro: "11/6 是预演，11/13 是判定，11/20 是复核。三堂课决定比赛日的出发配速。",
+    intro: "11/6 是预演，11/13 是判定，11/21 是复核。三堂课决定比赛日的出发配速。",
     items: {
       preview: {
         title: "预演 · 11/6 的 29km",
@@ -298,7 +335,7 @@ export const RUNNA_MAIN = {
         ],
       },
       review: {
-        title: "复核 · 11/20 长课",
+        title: "复核 · 11/21 长课",
         desc: "后 8km 跑 MP，带着前一周的疲劳做 · 检查适应是否正常",
         columns: ["表现", "处理"],
         rows: [

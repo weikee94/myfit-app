@@ -9,8 +9,11 @@ import type { AchievementTone } from "@/lib/progressStats";
 const HEX    = "M50 5 L91 28 L91 82 L50 105 L9 82 L9 28 Z";
 const SHIELD = "M50 4 L60 13 L90 13 L90 58 Q90 90 50 106 Q10 90 10 58 L10 13 L40 13 Z";
 
-const TONE: Record<AchievementTone, string> = {
+export type MedalTone = AchievementTone | "race";
+
+const TONE: Record<MedalTone, string> = {
   gold:     "#d4a72c",
+  race:     "#dc2626",
   strength: "hsl(var(--strength))",
   run:      "hsl(var(--run))",
   bike:     "hsl(var(--bike))",
@@ -19,7 +22,7 @@ const TONE: Record<AchievementTone, string> = {
 
 interface Props {
   shape?:    "hex" | "shield";
-  tone?:     AchievementTone;
+  tone?:     MedalTone;
   earned?:   boolean;
   size?:     number;
   className?: string;
